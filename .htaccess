@@ -1,0 +1,42 @@
+<IfModule mod_charset.c>
+  CharsetDisable On
+</IfModule>
+AddDefaultCharset UTF-8
+php_value default_charset utf-8
+
+php_flag register_globals off
+php_flag display_errors on
+
+#ErrorDocument 403 /errors.php?code=403
+ErrorDocument 404 /errors.php?code=404
+
+Options -Indexes
+
+DirectoryIndex index.php
+
+Options +FollowSymlinks
+RewriteEngine on
+RewriteBase /
+RewriteRule ^.htaccess$ - [F]
+
+# --------------  Универсалки
+RewriteRule ^([^\/.&]+)$ $1/ [R=301,L]
+RewriteRule ^([^\/.]+)/([^&^\/.]+)$ $1/$2/ [R=301,L]
+RewriteRule ^([^\/.]+)/([^\/.]+)/([^&^\/.]+)$ $1/$2/$3/ [R=301,L]
+
+# -------------- Картинки
+RewriteRule ^(slider)/([0-9]+)?.jpg$ uploads/$1/$2.jpg
+
+# -------------- Страницы
+RewriteRule ^([a-zA-Z0-9_-]+).htm$ pages.php?link=$1
+RewriteRule ^([a-zA-Z0-9_-]+).htm&(.*)$ pages.php?link=$1&$2
+
+# -------------- Каталог
+RewriteRule ^catalog/(.*)$ catalog.php?$1 [QSA]
+
+# -------------- Товары
+RewriteRule ^goods/([0-9]+)x([0-9]+)/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/goods/&width=$1&height=$2&fname=$3.jpg
+RewriteRule ^goods/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/goods/&fname=$1.jpg
+RewriteRule ^uploads/goods/([0-9]+)x([0-9]+)/([0-9]+)?.jpg inc/im_nocache.php?fpath=/uploads/goods/&width=$1&height=$2&fname=$3.jpg
+RewriteRule ^uploads/goods/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/goods/&fname=$1.jpg
+RewriteRule ^goods/([a-zA-Z0-9_\-]+).htm(.*)$ show_goods.php?link=$1$2

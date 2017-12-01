@@ -1,5 +1,9 @@
 <?
-require('inc/common.php');
+
+// -------------------- TITLE + КЛЮЧЕВЫЕ СЛОВА
+$title = $good['name'];
+foreach(array('title','keywords','description') as $val)
+	if($good[$val]) $$val = $good[$val];
 
 ob_start();
 ?><link rel="stylesheet" href="/css/good.css" type="text/css" /><?
@@ -10,66 +14,76 @@ ob_start();
 $const['js_links'] = ob_get_clean();
 
 ob_start();
-echo catalog();
-$Lcol = ob_get_clean();
 
-ob_start();
+$images = array();
+// остальные фото
+$imgs = getImages('goods',$good['id']);
+foreach ($imgs as $im){
+	$images[] = array(
+		'base' => "/uploads/goods/265x265/{$im}",
+		'href' => "/uploads/goods/{$im}",
+		'src' => "/uploads/goods/45x45/{$im}"
+	);
+}
 
 ?>
-<h1 class="page">Полотенцесушитель Цунами Электрический с полкой</h1>
+<h1 class="page"><?=$title?></h1>
 
 <div class="gim">
-  <div class="gim-chief"><img src="/img/good-list.jpg"></div>
+  <div class="gim-chief"><img src="<?=$images[0]['base']?>"></div>
   <div class="gim-other">
 		<?
-		//$i=0;
-		//foreach ($images as $img){
-    for($i=0; $i<4; $i++){
-			/*?><a class="im<?=!$i++?' active':''?>" base="<?=$img['base']?>" href="<?=$img['href']?>" title="<?=$good['name']?>" data-gallery=""><img src="<?=$img['src']?>"></a><?*/
-			?><a class="im<?=!$i?' active':''?>" href="/img/good-list.jpg" title=""><img src="/img/good-list.jpg" height="45"></a><?
+		$i=0;
+		foreach ($images as $img){
+			?><a class="im<?=!$i++?' active':''?>" base="<?=$img['base']?>" href="<?=$img['href']?>" title="<?=$good['name']?>" data-gallery=""><img src="<?=$img['src']?>"></a><?
 		}
 		?>
   </div>
 </div>
 
 <div class="good-preview">
+  <? if($good['feature']){ ?>
   <div class="h">Характеристики</div>
-  <div class="info">
-    Производитель: «ЕвроСтиль»<br>
-    Изготовлен из нержавеющей стали 2,0 мм<br>
-    Подключается к электрической сети<br>
-    Средняя потребляемая мощность 100 Вт<br>
-    Номинальная мощность ТЭНа 300 Вт<br>
-    Срок гарантии на ТЭН 1 год<br>
-    Срок службы полотенцесушителя 10 и более лет
-  </div>
+  <div class="info"><?=$good['feature']?></div>
+  <?}?>
+	<? if($good['kit']){ ?>
   <div class="h">Комплектация</div>
-  <div class="info">
-    Кран «Маевского» (воздушный клапан) 3 шт.<br>
-    Кронштейн телескопический (верхний крепеж) 3 шт.<br>
-    Тэн MEG 1.0 1 штука
-  </div>
+  <div class="info"><?=$good['kit']?></div>
+	<?}?>
 </div>
+
+<?
+// модификации
+$r = sql("SELECT * FROM {$prx}mods WHERE id_good='{$good['id']}' AND status = 1 ORDER BY sort,name");
+$mods = array();
+while ($arr = @mysql_fetch_assoc($r)){
+  $mods[] = $arr;
+}
+
+?>
 
 <div class="good-prm">
   <div class="lb">Цена</div>
-  <div class="price">4890 руб.</div>
+  <div class="price"><?=number_format($mods[0]['price'],0,',',' ')?> руб.</div>
   <div class="note">Стоимость изделия зависит от выбранных параметров</div>
   <div class="sep"></div>
   <div class="lb">Размер</div>
   <select name="size" class="form-control">
-    <option>100x60</option>
-    <option>150x40</option>
+    <?
+    foreach ($mods as $mod){
+      ?><option mod="<?=$mod['id']?>" price="<?=number_format($mods[0]['price'],0,',',' ')?>" price_shelf="<?=number_format($mods[0]['price_shelf'],0,',',' ')?>"><?=$mod['name']?></option><?
+    }
+    ?>
   </select>
   <div class="sep"></div>
   <div class="lb">С полкой</div>
   <select name="shelf" class="form-control">
     <option>да</option>
-    <option>нет</option>
+    <option selected>нет</option>
   </select>
   <div class="sep"></div>
   <div class="lb">Количество</div>
-	<?=chQuant()?>
+	<?//=chQuant()?>
   <div class="sep"></div>
 </div>
 
@@ -77,50 +91,40 @@ ob_start();
 
 <div class="good-info">
   <div class="h">Описание</div>
-  <div class="content">
-    <p>Электрические полотенцесушители для ванной могут быть теновыми и шнуровыми. В первом случае, в полотенцесушитель заливают
-    антифриз, во втором — прокладывают шнур. И тот и другой вариант Вы легко разместите в любом помещении, где есть розетка.
-    Чтобы приобрести электро полотенцесушитель в Москве, свяжитесь с нами по телефону или закажите обратный звонок.</p>
-    <p>Электро полотенцесушители «ЕвроСтиль» имеют следующие преимущества:</p>
-    <ul>
-      <li>простая установка в любом месте, где есть розетка;</li>
-      <li>автономная работа. Изделия не зависимы от системы отопления;</li>
-      <li>возможность регулировки температурного режима;</li>
-      <li>эстетичный внешний вид;</li>
-      <li>минимальное потребление энергии;</li>
-      <li>долгий сорок службы — более 10 лет.</li>
-    </ul>
-    <p>Электрические полотенцесушители от производителя «Маргроид» предусматривают возможность регулировки температуры с
-    помощью термостатической головки или встроенного термостата. Они потребляют небольшое количество энергии до 120 Вт,
-    благодаря чему считаются энергоэффективными и экономичными по затратам моделями. При необходимости, Вы всегда можете
-    отключить полотенцесушитель.</p>
-    <p>Чтобы купить электрический полотенцесушитель для ванной в Москве недорого, обращайтесь напрямую к производителю
-    «ЕвроСтиль». Наши электрические полотенцесушители имеют доступные цены, кроме того, мы постоянно запускаем в производство
-    новые модели, что позволяет устраивать распродажи, и предоставлять скидки на ранее выпущенные изделия.</p>
-  </div>
+  <div class="content"><?=$good['text']?></div>
 </div>
 
-<div class="good-similar">
-  <div class="h">Похожие товары</div>
-  <div class="sep"></div>
-
-  <div id="glist" class="row">
-		<? for($i=0; $i<3; $i++){?>
-      <div class="col-md-4">
-        <div class="good">
-          <a href="/good.php" class="name">
-            <div>Полотенцесушитель Вид 52 шнурового типа полотенцесушитель Вид 52 шнурового типа</div>
-            <img src="/img/good-list.jpg" height="200">
-          </a>
-          <div class="price">4890 руб.</div>
-          <div class="btn btn-default tocart">в корзину<span></span></div>
-        </div>
-      </div>
-		<?}?>
-  </div>
-
-</div>
 <?
+$r = sql("SELECT * FROM {$prx}goods WHERE id_catalog IN ({$ids_child_rubric}) AND NOT id = '{$good['id']}' AND status=1");
+if(@mysql_num_rows($r)){
+  ?>
+  <div class="good-similar">
+    <div class="h">Похожие товары</div>
+    <div class="sep"></div>
+    <div id="glist" class="row"><?
+      $i=0;
+      while ($g = mysql_fetch_assoc($r)){
+        $name = $g['title'] ? $g['title'] : $g['name'];
+        $lnk = $g['url'].$g['link'].'.htm';
+        $mod = getRow("SELECT * FROM {$prx}mods WHERE id_good='{$g['id']}' AND status = 1 ORDER BY sort,name LIMIT 1");
+        ?>
+        <div class="col-md-4">
+          <div class="good">
+            <a href="<?=$lnk?>" class="name">
+              <div><?=$name?></div>
+              <img src="/goods/200x200/<?=$g['id']?>.jpg">
+            </a>
+            <div class="clear"></div>
+            <div class="price"><?=number_format($mod['price'],0,',',' ')?> руб.</div>
+            <div class="btn btn-default tocart">в корзину<span></span></div>
+          </div>
+        </div>
+        <?
+      }
+    ?></div>
+  </div>
+  <?
+}
 
 $content = ob_get_clean();
 require('tpl/tpl.php');

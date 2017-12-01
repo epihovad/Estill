@@ -12,12 +12,16 @@
   <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"/>
+  <link rel="stylesheet" href="/js/jquery/blueimp-gallery/blueimp-gallery.css" type="text/css" />
+  <link rel="stylesheet" href="/js/jquery/blueimp-gallery/blueimp-gallery-indicator.css">
   <link rel="stylesheet" href="/css/style.css" type="text/css" />
 	<?=$const['css_links']?>
 
   <script src="/js/jquery/jquery-3.1.1.min.js"></script>
   <script src="/js/jquery/jquery-migrate-3.0.0.js"></script>
   <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/jquery/blueimp-gallery/blueimp-gallery.js"></script>
+  <script src="/js/jquery/blueimp-gallery/blueimp-gallery-indicator.js"></script>
 
   <script src="/js/jquery/arcticmodal/jquery.arcticmodal-0.3.min.js"></script>
   <link rel="stylesheet" href="/js/jquery/arcticmodal/jquery.arcticmodal-0.3.css">
@@ -39,6 +43,16 @@
 
 </head>
 <body>
+
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+  <div class="slides"></div>
+  <h3 class="title"></h3>
+  <a class="prev">‹</a>
+  <a class="next">›</a>
+  <a class="close">×</a>
+  <a class="play-pause"></a>
+  <ol class="indicator"></ol>
+</div>
 
 <div id="Header">
   <div id="inHeader">
@@ -73,14 +87,7 @@
     </div>
     <div id="Header-bottom">
       <div class="line clear"></div>
-      <ul id="main" class="row">
-        <li class="col-md-2 active"><a href="/">На главную</a></li>
-        <li class="col-md-2"><a href="">О компании</a></li>
-        <li class="col-md-2"><a href="">Каталог</a></li>
-        <li class="col-md-2"><a href="">Оптовикам</a></li>
-        <li class="col-md-2"><a href="">Доставка и оплата</a></li>
-        <li class="col-md-2"><a href="">Контакты</a></li>
-      </ul>
+      <?=main()?>
     </div>
   </div>
 </div>
@@ -93,7 +100,9 @@
     } else {
       ?>
       <div class="inMiddle">
+        <? if($Lcol){?>
         <div id="Lcol"><?=$Lcol?></div>
+        <?}?>
         <div id="Center"><?=navigate()?><?=$content?></div>
       </div>
       <?

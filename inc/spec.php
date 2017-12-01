@@ -20,14 +20,15 @@ function main()
 	if(!$count = @mysql_num_rows($res)) return;
 
 	$url = $_SERVER['REQUEST_URI'];
-
+	?><ul id="main" class="row"><?
 	while($row = mysql_fetch_assoc($res))
 	{
 		$link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
 		$cur = $row['id']==$mainID || ($url=='/' && $link=='/') ? true : false;
 
-		?><div><a id="lnk<?=$row['id']?>" href="<?=$link?>"<?=$cur?' class="cur"':''?>><?=$row['name']?></a></div><?
+		?><li id="main-<?=$row['id']?>" class="col-md-2<?=$cur?' active':''?>"><a href="<?=$link?>"><?=$row['name']?></a></li><?
 	}
+	?></ul><?
 }
 
 function islider()
@@ -52,27 +53,71 @@ function islider()
 
 function navigate()
 {
-  ?>
+	global $prx, $rubric, $good, $page, $ids_parent_rubric;
+
+	$sep = '<span>&rarr;</span>';
+	$nav = '';
+
+	// обычная страница
+	if($page){
+
+	  $nav .= $page['name'];
+
+  }
+  // каталог или страница товара
+  elseif ($rubric || $good){
+
+	  $ids_parent_rubric = (array)$ids_parent_rubric;
+		if(!$ids_parent_rubric) return;
+
+		$tbl = 'catalog';
+		$link = "/{$tbl}/";
+		$nav .= '<a href="/catalog/">Каталог</a>';
+
+		foreach($ids_parent_rubric as $id_rubric)
+		{
+			$rb = $id_rubric==$rubric['id'] ? $rubric : gtv($tbl,'name,link',$id_rubric);
+			$link .= ($id_rubric==$rubric['id'] ? $rb['link'] : gtv($tbl,'link',$id_rubric)).'/';
+			if(!$good && $id_rubric==$rubric['id']){
+				$nav .= $sep.$rb['name'];
+			} else {
+				$nav .= $sep.'<a href="'.$link.'">'.$rb['name'].'</a>';
+			}
+		}
+
+		if($good) $nav .= ($nav?$sep:'').$good['name'];
+  }
+
+	?>
   <div id="navigate">
     <div class="in">
-      <a href="/">Главная</a><span>&rarr;</span><a href="/catalog">Каталог</a><span>&rarr;</span>Водяные полотенцесушители
+      <a href="/">Главная</a><?=$sep?><?=$nav?>
     </div>
   </div>
-  <?
+	<?
 }
 
 function catalog()
 {
-  ?>
-  <div id="catalog">
-    <div class="lvl1"><a href="#">Комплектующие для полотенцесушителей</a></div>
-    <div class="lvl1"><span>Водяные полотенцесушители</span></div>
-    <div class="lvl2"><a href="#">«Лесенка» электрические полотенцесушители</a></div>
-    <div class="lvl2 active"><span>«Лесенка» с полкой электрические полотенцесушители</span></div>
-    <div class="lvl2"><a href="#">Электрические полотенцесушители Шнурового типа</a></div>
-    <div class="lvl1"><a href="#">Электрические полотенцесушители</a></div>
-  </div>
-  <?
+	global $prx, $rubric, $ids_parent_rubric;
+
+	$ids_parent_rubric = (array)$ids_parent_rubric;
+
+	$tree = getTree("SELECT * FROM {$prx}catalog WHERE status = 1 ORDER BY sort,id");
+	if(!sizeof($tree)) return;
+
+	?><div id="catalog"><?
+	foreach ($tree as $branch){
+
+		$lvl = $branch['level'];
+	  $rb = $branch['row'];
+		$id = $rb['id'];
+    $active = in_array($id,$ids_parent_rubric) !== false;
+    $cur = $id == $rubric['id'];
+
+    ?><div class="lvl<?=$lvl+1?><?=$active?' active':''?><?=$cur?' cur':''?>"><a href="<?=getCatUrl($rb)?>"><?=wordwrap($rb['name'], 50, '<br>')?></a></div><?
+  }
+  ?></div><?
 }
 
 // СЧЕТЧИКИ (ФУТЕР)

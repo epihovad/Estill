@@ -12,41 +12,9 @@ jQuery(document).ready(function( $ ) {
   var H = $(document).innerHeight();
   var w = $('body').width();
   //
-	$('.bmain .cell').hover(
-		function(){ $(this).addClass('hover'); },
-		function(){ $(this).removeClass('hover'); }
-	);
+  $('a[href^="http://"]').each(function(){if($(this).attr('target')==undefined) $(this).attr('target','_blank')});
   //
-  $('.sz').html($('.Around').width());
-  $( window ).resize(function() {
-    w = $('body').width();
-    ElemPos();
-    $('.sz').html($('body').width());
-  });
-  //
-  fixHeader();
-  $(document).add('body').scroll(function(){
-    y = $(document).scrollTop()*1;
-    fixHeader();
-  });
-  //
-  function fixHeader(){
-    if(y > 0) {
-      $('div.inHeader').addClass('fixed');
-    } else {
-      $('div.inHeader').removeClass('fixed');
-    }
-    ElemPos();
-  }
-  //
-  function ElemPos(){
-    l = w > 1950 ? 1950-68 : (w < 1024 ? 1024-68 : w-68);
-    $('div.hcart').css('left',l);
-    $('#up-btn').css('left',l+11);
-    //
-    if(y/H*100>10) $('#up-btn').show();
-    else $('#up-btn').hide();
-  }
+  $('a.back').click(function(){ history.back(); return false; });
   //
   $('.btn-number').click(function(e){
     e.preventDefault();
@@ -115,7 +83,7 @@ jQuery(document).ready(function( $ ) {
     }
   });
   //
-  $('.main #lnk17').click(function(){
+  /*$('.main #lnk17').click(function(){
     $('html:not(:animated),body:not(:animated)').animate({scrollTop:$('h1.catalog').offset().top-75},500,function(){});
     return false;
   });
@@ -130,7 +98,7 @@ jQuery(document).ready(function( $ ) {
   $('.bmain a[pid="lc"]').click(function(){ jPop('/inc/actions.php?show=auth'); return false; });
   //
   $('.Subscribe .btn').click(function(){ inajax('/inc/actions.php?action=subscribe','mail='+$('.Subscribe input').val()); return false; });
-  //$(document).jAlert('show','confirm','Товар добавлен к Вашему заказу.<br>Вы желаете перейти в корзину?',function(){top.location.href='/cart.php'});
+  //$(document).jAlert('show','confirm','Товар добавлен к Вашему заказу.<br>Вы желаете перейти в корзину?',function(){top.location.href='/cart.php'});*/
 });
 
 function jPop(url) {

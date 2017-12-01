@@ -50,9 +50,21 @@ jQuery(document).ready(function( $ ) {
     return false;
   });
   //
+  var $size = $('select[name="size"]');
+  var $shelf = $('select[name="shelf"]');
+  $size.add($shelf).change(function () {
+    var $option_price = $size.find('option:selected');
+    var $option_shef = $shelf.find('option:selected');
+    var price = $option_price.attr('price');
+    var price_shelf = $option_price.attr('price_shelf');
+    var sections = $option_price.attr('sections');
+    $('.price span').html($option_shef.val()=='нет' ? price : price_shelf);
+    $('.sections').html(sections);
+  });
+  //
   $('.tocart').click(function(){
-    var mod = $('.gim-mods a.im.active').attr('mod');
-    var quant = $('.good-tocart input[name="quant"]').val();
+    var mod = $size.find('option:selected').attr('mod');
+    var quant = $('.good-prm input[name="quant"]').val();
     $('.tocart').addClass('disabled');
     toCart(mod,quant);
     return false;

@@ -75,7 +75,7 @@ jAlert - собственный плагин (v1.0).
 			
 			prm = $.extend({
 				ws : true, // с применением тени
-				ws_params : {bg:'',color:'#000',opacity:90,z:zmax?zmax:999}, // параметры тени
+				ws_params : {bg:'',color:'#000',opacity:70,z:zmax?zmax:999}, // параметры тени
 				z : zmax?zmax+1:1000, // z-index окна
 				b_alert : 'Ok',
 				b_confirm : {b1:'Да',b2:'Нет'},

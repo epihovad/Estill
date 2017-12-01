@@ -31,7 +31,7 @@ $Lcol = ob_get_clean();
 
 // Товар?
 $good = array();
-preg_match('/[^\.htm]*/', $url[end(array_keys($url))], $m);
+preg_match('/[^\.htm]*/', $url[sizeof($url)-1], $m);
 if($good_link = clean($m[0])){
   $good = getRow("SELECT * FROM {$prx}goods WHERE link='{$good_link}' AND status=1");
 }

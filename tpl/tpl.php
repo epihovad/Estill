@@ -66,7 +66,7 @@
     <div id="Header-middle">
       <a id="logo" class="fleft" href="/"><img src="/img/logo.png"></a>
       <div id="cart" class="fright">
-        <a href="/cart/"><span>7</span></a>
+        <a href="/cart/"><span><?=$_SESSION['cart']['quant']?></span></a>
       </div>
       <div id="feed-btns" class="fright">
         <div class="row">

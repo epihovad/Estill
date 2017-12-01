@@ -37,6 +37,7 @@ a.more:after { content:"→"; position:absolute; margin-left:5px; }
 .sep { padding-top:2px; font-size:0; background-color:#42a4ff;}
 .pd10 { padding:0 10px;}
 
+.blueimp-gallery { background:rgba(0, 0, 0, 0.7); }
 .blueimp-gallery-display { /*filter: blur(2px) grayscale(100%);*/}
 .blueimp-gallery > .indicator > li { background-size:cover; width:50px; height:50px; border-radius:0;}
 

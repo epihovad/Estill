@@ -17,6 +17,7 @@
 .good-prm .sep { clear:both; font-size:0; padding:10px 0 0; margin:0 0 10px 0; border-bottom:1px solid #ebebeb; background:none;}
 .good-prm select { width:auto; float:right; color:#313132; font-size:16px;}
 .good-prm .input-group { width:60px; margin-top:-3px; float:right;}
+.good-prm .tocart { background-color:#3093ef;}
 
 .good-info { padding-top:30px;}
 .good-info .h { font:normal 20px/1 'Alegreya Sans', sans-serif; color:#004687; padding-bottom:20px;}

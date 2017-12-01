@@ -54,7 +54,7 @@ foreach ($imgs as $im){
 
 <?
 // модификации
-$r = sql("SELECT * FROM {$prx}mods WHERE id_good='{$good['id']}' AND status = 1 ORDER BY sort,name");
+$r = sql("SELECT * FROM {$prx}mods WHERE id_good='{$good['id']}' AND status = 1 ORDER BY sort,price");
 $mods = array();
 while ($arr = @mysql_fetch_assoc($r)){
   $mods[] = $arr;
@@ -64,14 +64,14 @@ while ($arr = @mysql_fetch_assoc($r)){
 
 <div class="good-prm">
   <div class="lb">Цена</div>
-  <div class="price"><?=number_format($mods[0]['price'],0,',',' ')?> руб.</div>
+  <div class="price"><span><?=number_format($mods[0]['price'],0,',',' ')?></span> руб.</div>
   <div class="note">Стоимость изделия зависит от выбранных параметров</div>
   <div class="sep"></div>
   <div class="lb">Размер</div>
   <select name="size" class="form-control">
     <?
     foreach ($mods as $mod){
-      ?><option mod="<?=$mod['id']?>" price="<?=number_format($mods[0]['price'],0,',',' ')?>" price_shelf="<?=number_format($mods[0]['price_shelf'],0,',',' ')?>"><?=$mod['name']?></option><?
+      ?><option mod="<?=$mod['id']?>" price="<?=number_format($mod['price'],0,',',' ')?>" price_shelf="<?=number_format($mod['price_shelf'],0,',',' ')?>" sections="<?=$mod['sections']?>"><?=$mod['name']?></option><?
     }
     ?>
   </select>
@@ -82,9 +82,13 @@ while ($arr = @mysql_fetch_assoc($r)){
     <option selected>нет</option>
   </select>
   <div class="sep"></div>
-  <div class="lb">Количество</div>
-	<?//=chQuant()?>
+  <div class="lb">Кол-во секций</div>
+  <div class="sections"><?=$mods[0]['sections']?></div>
   <div class="sep"></div>
+  <div class="lb">Количество</div>
+	<?=chQuant()?>
+  <div class="sep"></div>
+  <div class="btn btn-default tocart">в корзину<span></span></div>
 </div>
 
 <div class="clear"></div>
@@ -106,7 +110,7 @@ if(@mysql_num_rows($r)){
       while ($g = mysql_fetch_assoc($r)){
         $name = $g['title'] ? $g['title'] : $g['name'];
         $lnk = $g['url'].$g['link'].'.htm';
-        $mod = getRow("SELECT * FROM {$prx}mods WHERE id_good='{$g['id']}' AND status = 1 ORDER BY sort,name LIMIT 1");
+        $mod = getRow("SELECT * FROM {$prx}mods WHERE id_good='{$g['id']}' AND status = 1 ORDER BY sort,price LIMIT 1");
         ?>
         <div class="col-md-4">
           <div class="good">

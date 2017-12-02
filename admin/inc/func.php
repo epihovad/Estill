@@ -17,6 +17,8 @@ function remove_catalog($id)
 	sql("UPDATE {$prx}goods SET id_catalog=0 WHERE id_catalog='{$id}'");
 	// чистим sitemap
 	sql("DELETE FROM {$prx}sitemap WHERE id_obj='{$id}' AND `type`='{$tbl}'");
+	// мочим картинки
+	remove_img($id,$tbl);
 	// удаляем текущую рубрику
 	update($tbl,'',$id);
 }

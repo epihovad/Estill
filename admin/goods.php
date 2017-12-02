@@ -165,9 +165,7 @@ if(isset($_GET['action']))
 			break;
     // ----------------- удаление изображения
     case 'img_del':
-      $id = (int)$_GET['id'];
-			$fname = $_GET['fname'];
-      remove_img($fname,$tbl);
+      remove_img($id,$tbl);
       ?><script>top.location.href = '<?=$script?>?red=<?=$id?>'</script><?
       break;
 	}

@@ -3,6 +3,7 @@ require('inc/common.php');
 
 $rubric = 'Каталог';
 $tbl = 'catalog';
+$id = (int)$_GET['id'];
 
 // ------------------- СОХРАНЕНИЕ ------------------------
 if(isset($_GET['action']))
@@ -54,6 +55,26 @@ if(isset($_GET['action']))
 				
 			if($updateLink)
 				update($tbl,"link='".($link.'_'.$id)."'",$id);
+
+			// загружаем картинки
+      if(sizeof((array)$_FILES[$tbl]['name']))
+      {
+        foreach($_FILES[$tbl]['name'] as $num=>$null)
+        {
+          if(!$_FILES[$tbl]['name'][$num]) continue;
+
+          // формируем имя картинки
+          if($new_name = get_pic_name($id, $tbl))
+          {
+            remove_img($new_name, $tbl);
+
+            $path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$new_name}";
+            @move_uploaded_file($_FILES[$tbl]['tmp_name'][$num],$path);
+            @chmod($path,0644);
+            resizeIm($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$new_name}",array('250','250'),$_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/250x250/{$new_name}",1,'');
+          }
+        }
+      }
 			
 			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
 			break;
@@ -80,11 +101,16 @@ if(isset($_GET['action']))
 			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
-			foreach($_POST['check_del_'] as $k=>$v)
+			foreach($_POST['check_del_'] as $id=>$v)
       {
-				remove_catalog($k);
+				remove_catalog($id);
       }
 			?><script>top.location.href = '<?=$script?>'</script><?
+			break;
+		// ----------------- удаление изображения
+		case 'img_del':
+			remove_img($id,$tbl);
+			?><script>top.location.href = '<?=$script?>?red=<?=$id?>'</script><?
 			break;
 	}
 	exit;
@@ -119,6 +145,7 @@ elseif(isset($_GET['red']))
       <th>Ссылка</th>
       <td><?=show_pole('text','link',$row['link'])?></td>
     </tr>
+		<?=show_tr_images($id,'Фото','',1,'catalog','catalog')?>
     <tr>
       <th class="tab_red_th"></th>
       <th>Описание</th>
@@ -211,6 +238,7 @@ else
     <tr>
       <th><input type="checkbox" name="check_del" id="check_del" /></th>
       <th>№</th>
+      <th><img src="img/image.png" title="изображение" /></th>
       <th nowrap width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
        <? if($sitemap){?>
       <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
@@ -239,31 +267,44 @@ else
 			$prfx = $prefix===NULL ? getPrefix($level) : str_repeat($prefix, $level);
 			?>
 			<tr id="row<?=$id?>">
-			<th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /></th>
-      <th><?=$i++?></th>
-      <td nowrap><?=$prfx?><a href="?red=<?=$id?>" class="link1"<?=$style?>><?=$row['name']?></a></td>
-			<? if($sitemap){?>
-      <th class="sitemap"><input type="text" class="datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
-      <th class="sitemap"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
-      <th class="sitemap"><input type="text" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" style="text-align:center; width:30px;" /></th>
-			<? }?>
-      <td><?=getCatUrl($row,true)?></td>
-			<td align="center">
-				<?
-				if($count = getCountSub($id))
-				{
-					?><a href="" style="color:#090" onClick="RegSessionSort('goods.php','catalog=<?=$id?>');return false;"><?=$count?></a><?
-				}
-				else
-					echo '0';
-				?>
-			</td>
-			<td align="center"><?=btn_flag($row['status'],$id,'action=status&id=')?></td>
-			<? 
-			if(!$_SESSION['ss']['sort'])
-				echo "<td nowrap align='center'>".btn_sort($id)."</td>";
-			?>
-			<td nowrap align="center"><?=btn_edit($id)?></td>
+        <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /></th>
+        <th><?=$i++?></th>
+        <th style="padding:3px 5px;">
+          <?
+          $src = '/uploads/no_photo.jpg';
+          $big_src = '/uploads/no_photo.jpg';
+          if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/goods/{$id}.jpg")){
+            $src = "/uploads/goods/45x45/{$id}.jpg";
+            $big_src = "/uploads/goods/{$id}.jpg";
+          }
+          ?>
+          <a href="<?=$big_src?>" class="highslide" onclick="return hs.expand(this)">
+            <img src="<?=$src?>" align="absmiddle" height="45" />
+          </a>
+        </th>
+        <td nowrap><?=$prfx?><a href="?red=<?=$id?>" class="link1"<?=$style?>><?=$row['name']?></a></td>
+        <? if($sitemap){?>
+        <th class="sitemap"><input type="text" class="datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+        <th class="sitemap"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+        <th class="sitemap"><input type="text" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" style="text-align:center; width:30px;" /></th>
+        <? }?>
+        <td><?=getCatUrl($row,true)?></td>
+        <td align="center">
+          <?
+          if($count = getCountSub($id))
+          {
+            ?><a href="" style="color:#090" onClick="RegSessionSort('goods.php','catalog=<?=$id?>');return false;"><?=$count?></a><?
+          }
+          else
+            echo '0';
+          ?>
+        </td>
+        <td align="center"><?=btn_flag($row['status'],$id,'action=status&id=')?></td>
+        <?
+        if(!$_SESSION['ss']['sort'])
+          echo "<td nowrap align='center'>".btn_sort($id)."</td>";
+        ?>
+        <td nowrap align="center"><?=btn_edit($id)?></td>
 			</tr>
 			<?
 		}	

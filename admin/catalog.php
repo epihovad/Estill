@@ -71,6 +71,7 @@ if(isset($_GET['action']))
             $path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$new_name}";
             @move_uploaded_file($_FILES[$tbl]['tmp_name'][$num],$path);
             @chmod($path,0644);
+						resizeIm($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$new_name}",array('45','45'),$_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/45x45/{$new_name}",1,'');
             resizeIm($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$new_name}",array('250','250'),$_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/250x250/{$new_name}",1,'');
           }
         }
@@ -273,9 +274,9 @@ else
           <?
           $src = '/uploads/no_photo.jpg';
           $big_src = '/uploads/no_photo.jpg';
-          if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/goods/{$id}.jpg")){
-            $src = "/uploads/goods/45x45/{$id}.jpg";
-            $big_src = "/uploads/goods/{$id}.jpg";
+          if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/catalog/{$id}.jpg")){
+            $src = "/uploads/catalog/45x45/{$id}.jpg";
+            $big_src = "/uploads/catalog/{$id}.jpg";
           }
           ?>
           <a href="<?=$big_src?>" class="highslide" onclick="return hs.expand(this)">

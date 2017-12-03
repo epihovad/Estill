@@ -45,29 +45,24 @@ ob_start();
 
   <div id="catlist">
     <div class="inMiddle">
-      <div class="row">
-        <div class="col-md-4 item">
-          <a href="#">
-            <img src="/img/good-list.jpg">
-            <div class="sep"></div>
-            <div class="name">Комплектующие для полотенцесушителей</div>
-          </a>
-        </div>
-        <div class="col-md-4 item">
-          <a href="#">
-            <img src="/img/good-list.jpg">
-            <div class="sep"></div>
-            <div class="name">Водяные полотенцесушители</div>
-          </a>
-        </div>
-        <div class="col-md-4 item">
-          <a href="#">
-            <img src="/img/good-list.jpg">
-            <div class="sep"></div>
-            <div class="name">Электрические полотенцесушители</div>
-          </a>
-        </div>
-      </div>
+      <?
+      $r = sql("SELECT * FROM {$prx}catalog WHERE id_parent='0' AND status=1 ORDER BY sort,id");
+      if(@mysql_num_rows($r)){
+        $i=0;
+        while ($rb = mysql_fetch_assoc($r)){
+          if($i++%3==0){ ?><div class="row"><? }
+          ?>
+          <div class="col-md-4 item">
+            <a href="<?=getCatUrl($rb)?>">
+              <img src="/catalog/250x250/<?=$rb['id']?>.jpg" height="235">
+              <div class="sep"></div>
+              <div class="name"><?=wordwrap($rb['name'], 50, '<br>')?></div>
+            </a>
+          </div>
+          <?
+        }
+        ?></div><?
+      }?>
       <div class="clear" style="padding-top:50px;"></div>
       <div class="btn medium btn-default">перейти в каталог</div>
     </div>
@@ -77,14 +72,14 @@ ob_start();
   <div id="about-us" data-parallax="scroll" data-image-src="/img/about-bg.jpg">
     <div class="inMiddle">
       <div class="h">
-        Компания «...» - один из крупнейших производителей
+        Компания «ЕвроСтиль» - один из крупнейших производителей
         полотенцесушителей с огромным количеством
         благодарных клиентов.
       </div>
       <div class="sep"></div>
       <div class="note">
         Постоянное увеличение и совершенствование ассортимента продукции, внедрение инновационных производственных процессов,
-        широкая сеть каналов сбыта по всей России и странам СНГ — все это позволяет компании «...» сохранять лидирующие позииции на рынке долгие годы.
+        широкая сеть каналов сбыта по всей России и странам СНГ — все это позволяет компании «ЕвроСтиль» сохранять лидирующие позииции на рынке долгие годы.
       </div>
     </div>
   </div>

@@ -54,8 +54,8 @@ a.more:after { content:"→"; position:absolute; margin-left:5px; }
 #Middle.index { padding-bottom:390px; background:url(/img/middle-bg.png) repeat-x top;}
 #Middle .inMiddle { width:1263px; margin:0 auto;}
 #Center { padding-left:15px; padding-right:15px; }
-#Lcol { float:left; width:275px; margin:0 40px 0 15px; padding-top:85px;}
-#Lcol + #Center { float:left; width:918px; }
+#Lcol { float:left; width:275px; margin:0 0 0 15px; padding-top:85px;}
+#Lcol + #Center { float:left; width:958px; }
 #Footer { position:relative; height:390px; margin-top:-390px; background-color:#313132; }
 #inFooter { width:1263px; height:390px; margin:0 auto; }
 
@@ -130,6 +130,7 @@ a.more:after { content:"→"; position:absolute; margin-left:5px; }
 #catlist a .sep { width:60px;}
 #catlist a .name { padding:10px 20px 0; font-size:24px; color:#01a6ff; line-height:26px;}
 #catlist a:hover { box-shadow:0 0 10px #7c7c7c;}
+#catlist .row + .row { padding-top:50px;}
 
 #about-us {
   min-height: 500px;
@@ -207,7 +208,7 @@ form div.hdn { display:none !important;}
 #cat-im { width:195px; position:absolute; text-align:center; padding-top:30px; }
 #cat-header { width:100%; display:table; background-color:#1973c5;}
 #cat-header h1 { display:table-cell; vertical-align:middle; padding:20px 0 20px 195px; color:#fff; font-size:36px; line-height:30px; text-align:left;}
-#cat-preview { padding:20px 0 40px 195px; text-align:justify; min-height:150px;}
+#cat-preview { padding:20px 0 40px 195px; text-align:justify; min-height:180px;}
 
 .pagination { margin:0;}
 

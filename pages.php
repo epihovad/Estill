@@ -14,6 +14,10 @@ foreach(array('title','keywords','description') as $val)
 	if($page[$val]) $$val = $page[$val];
 
 ob_start();
+echo catalog();
+$Lcol = ob_get_clean();
+
+ob_start();
 $h1 = $page['h1'] ? $page['h1'] : $page['name'];
 ?>
 <h1><?=$h1?></h1>

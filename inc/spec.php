@@ -203,8 +203,32 @@ function get_href($link,$page)
 {
 	global $dopURL;
 	ob_start();
-		?><a class="bk4" href="<?=$link?>&page=<?=$page?><?=$dopURL?>"><?=$page?></a><?
+	?><a class="bk4" href="<?=$link?>&page=<?=$page?><?=$dopURL?>"><?=$page?></a><?
 	return ob_get_clean();
+}
+//
+function pagination($count_page, $cur_page)
+{
+  if($count_page < 2) return;
+
+	preg_match('/(&page=[0-9]+)/',$_SERVER['REQUEST_URI'],$h);
+	$link = str_replace($h[1],'',$_SERVER['REQUEST_URI']);
+
+  ?>
+  <ul class="pagination">
+    <li<?=$cur_page==1?' class="disabled"':''?>><a href="<?=$link?>&page=<?=$cur_page>1?$cur_page-1:1?>">&laquo;</a></li>
+		<?
+		for ($page = 1; $page <= $count_page; $page++) {
+			if ($page == $cur_page) {
+				?><li class="active"><a href="<?=$link?>&page=<?=$page?>"><?=$page?> <span class="sr-only">(current)</span></a></li><?
+			} else {
+				?><li><a href="<?=$link?>&page=<?=$page?>"><?=$page?></a></li><?
+			}
+		}
+		?>
+    <li<?=$cur_page==$count_page?' class="disabled"':''?>><a href="<?=$link?>&page=<?=$cur_page<$count_page?$cur_page+1:$count_page?>">&raquo;</a></li>
+  </ul>
+  <?
 }
 
 function num2str($count,$txt='товар')

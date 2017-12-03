@@ -48,47 +48,57 @@ foreach(array('title','keywords','description') as $val)
 
 ob_start();
 
+if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/catalog/250x250/{$rubric['id']}.jpg")){
+  ?><div id="cat-im"><img src="/catalog/250x250/<?=$rubric['id']?>.jpg"></div><?
+}
 ?>
-<div id="cat-im"><img src="/img/cat-list.png"></div>
 <div id="cat-header"><h1><?=wordwrap($rubric['name'], 40, '<br>')?></h1></div>
 <div id="cat-preview"><?=$rubric['text']?></div>
-
-<ul class="pagination fright">
-  <li class="disabled"><a href="#">&laquo;</a></li>
-  <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-  <li><a href="#">2</a></li>
-  <li><a href="#">3</a></li>
-  <li><a href="#">4</a></li>
-  <li><a href="#">5</a></li>
-  <li><a href="#">&raquo;</a></li>
-</ul>
 <div class="clear"></div>
+<?
 
-<div id="glist" class="row">
-  <? for($i=0; $i<12; $i++){?>
-  <div class="col-md-4">
-    <div class="good">
-      <a href="/good.php" class="name">
-        <div>Полотенцесушитель Вид 52 шнурового типа полотенцесушитель Вид 52 шнурового типа</div>
-        <img src="/img/good-list.jpg" height="200">
-      </a>
-      <div class="clear"></div>
-      <div class="price">4890 руб.</div>
-      <div class="btn btn-default tocart">в корзину<span></span></div>
+$query = "SELECT * FROM {$prx}goods WHERE id_catalog IN ({$ids_child_rubric})";
+
+$r = sql($query);
+$count_goods = (int)@mysql_num_rows($r); // кол-во объектов в базе
+$count_goods_on_page = 9; // кол-во объектов на странице
+$count_page = ceil($count_goods/$count_goods_on_page); // количество страниц
+$cur_page = (int)$_GET['page'] ? (int)$_GET['page'] : 1;
+
+$query .= ' LIMIT '.($count_goods_on_page*$cur_page-$count_goods_on_page).",".$count_goods_on_page;
+$res = sql($query);
+
+?>
+<div class="fright"><?=pagination($count_page, $cur_page)?></div>
+<div class="clear"></div>
+<?
+
+if(@mysql_num_rows($res)){
+	?><div id="glist" class="row"><?
+  $i=0;
+  while ($g = mysql_fetch_assoc($res)){
+    $name = $g['h1'] ? $g['h1'] : $g['name'];
+    $lnk = $g['url'].$g['link'].'.htm';
+    $mod = getRow("SELECT * FROM {$prx}mods WHERE id_good='{$g['id']}' AND status = 1 ORDER BY sort,price LIMIT 1");
+    ?>
+    <div class="col-md-4">
+      <div class="good">
+        <a href="<?=$lnk?>" class="name">
+          <div><?=$name?></div>
+          <img src="/goods/200x200/<?=$g['id']?>.jpg">
+        </a>
+        <div class="clear"></div>
+        <div class="price"><?=number_format($mod['price'],0,',',' ')?> руб.</div>
+        <div class="btn btn-default tocart">в корзину<span></span></div>
+      </div>
     </div>
-  </div>
-  <?}?>
-</div>
+    <?
+  }
+  ?></div><?
+}
+?>
 
-<ul class="pagination fright">
-  <li class="disabled"><a href="#">&laquo;</a></li>
-  <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-  <li><a href="#">2</a></li>
-  <li><a href="#">3</a></li>
-  <li><a href="#">4</a></li>
-  <li><a href="#">5</a></li>
-  <li><a href="#">&raquo;</a></li>
-</ul>
+<div class="fright"><?=pagination($count_page, $cur_page)?></div>
 <div class="clear"></div>
 <?
 

@@ -27,10 +27,10 @@ foreach ($imgs as $im){
 }
 
 ?>
-<h1 class="page"><?=$title?></h1>
+<h1 class="page"><?=$good['h1']?$good['h1']:$good['name']?></h1>
 
 <div class="gim">
-  <div class="gim-chief"><img src="<?=$images[0]['base']?>"></div>
+  <div class="gim-chief"><img src="<?=$images[0]['base']?$images[0]['base']:"/goods/265x265/{$good['id']}.jpg"?>"></div>
   <div class="gim-other">
 		<?
 		$i=0;
@@ -44,11 +44,11 @@ foreach ($imgs as $im){
 <div class="good-preview">
   <? if($good['feature']){ ?>
   <div class="h">Характеристики</div>
-  <div class="info"><?=$good['feature']?></div>
+  <div class="info"><?=nl2br($good['feature'])?></div>
   <?}?>
 	<? if($good['kit']){ ?>
   <div class="h">Комплектация</div>
-  <div class="info"><?=$good['kit']?></div>
+  <div class="info"><?=nl2br($good['kit'])?></div>
 	<?}?>
 </div>
 
@@ -88,7 +88,7 @@ while ($arr = @mysql_fetch_assoc($r)){
   <div class="lb">Количество</div>
 	<?=chQuant()?>
   <div class="sep"></div>
-  <div class="btn btn-default tocart">в корзину<span></span></div>
+  <div class="btn btn-default medium tocart">в корзину<span></span></div>
 </div>
 
 <div class="clear"></div>
@@ -99,7 +99,7 @@ while ($arr = @mysql_fetch_assoc($r)){
 </div>
 
 <?
-$r = sql("SELECT * FROM {$prx}goods WHERE id_catalog IN ({$ids_child_rubric}) AND NOT id = '{$good['id']}' AND status=1");
+$r = sql("SELECT * FROM {$prx}goods WHERE id_catalog IN ({$ids_child_rubric}) AND NOT id = '{$good['id']}' AND status=1 ORDER BY RAND() LIMIT 3");
 if(@mysql_num_rows($r)){
   ?>
   <div class="good-similar">
@@ -108,7 +108,7 @@ if(@mysql_num_rows($r)){
     <div id="glist" class="row"><?
       $i=0;
       while ($g = mysql_fetch_assoc($r)){
-        $name = $g['title'] ? $g['title'] : $g['name'];
+        $name = $g['h1'] ? $g['h1'] : $g['name'];
         $lnk = $g['url'].$g['link'].'.htm';
         $mod = getRow("SELECT * FROM {$prx}mods WHERE id_good='{$g['id']}' AND status = 1 ORDER BY sort,price LIMIT 1");
         ?>

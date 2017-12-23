@@ -9,7 +9,7 @@
 
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"/>
   <link rel="stylesheet" href="/js/jquery/blueimp-gallery/blueimp-gallery.css" type="text/css" />
@@ -58,9 +58,9 @@
   <div id="inHeader">
     <div id="Header-top" class="row">
       <div class="col-md-4 text-left"></div>
-      <div class="col-md-4 text-center">Добро пожаловать в интернет магазин «ЕвроСтиль»</div>
+      <div class="col-md-4 text-center"><?=set('greeting')?></div>
       <div class="col-md-4 text-right">
-        <div class="btn btn-default">бесплатная консультация</div>
+        <div class="btn btn-default fb-frm" tp="cns">бесплатная консультация</div>
       </div>
     </div>
     <div id="Header-middle">
@@ -71,15 +71,15 @@
       <div id="feed-btns" class="fright">
         <div class="row">
           <div class="feed-phone col-md-4 item">
-            <a href="#" rel="nofollow" class="fleft"></a>
-            <div>бесплатный телефон</div><span>8-800-2000-600</span>
+            <a href="" rel="nofollow" class="fleft fb-frm" tp="phone"></a>
+            <div>бесплатный телефон</div><span><?=set('phone')?></span>
           </div>
           <div class="feed-mail col-md-4 item">
-            <a href="#" rel="nofollow" class="fleft"></a>
-            <div>firma@mail.ru<br>company@mail.ru</div>
+            <a href="" rel="nofollow" class="fleft fb-frm" tp="email"></a>
+            <div><?=nl2br(set('email'))?></div>
           </div>
           <div class="feed-msg col-md-4 item">
-            <a href="#" rel="nofollow" class="fleft"></a>
+            <a href="" rel="nofollow" class="fleft fb-frm" tp="msg"></a>
             <div>напишите нам и мы с радостью ответим на все Ваши вопросы</div>
           </div>
         </div>
@@ -130,15 +130,15 @@
           <div class="h">Наши контакты</div>
           <div class="sep"></div>
           <div class="feed-phone">
-            <a href="#" rel="nofollow" class="fleft"></a>
-            <div>бесплатный телефон</div><span>8-800-2000-600</span>
+            <a href="" rel="nofollow" class="fleft fb-frm" tp="phone"></a>
+            <div>бесплатный телефон</div><span><?=set('phone')?></span>
           </div>
           <div class="feed-mail">
-            <a href="#" rel="nofollow" class="fleft"></a>
-            <div>firma@mail.ru<br>company@mail.ru</div>
+            <a href="" rel="nofollow" class="fleft fb-frm" tp="email"></a>
+            <div><?=nl2br(set('email'))?></div>
           </div>
           <div class="feed-msg">
-            <a href="#" rel="nofollow" class="fleft"></a>
+            <a href="" rel="nofollow" class="fleft fb-frm" tp="msg"></a>
             <div>напишите нам и мы с радостью ответим на все Ваши вопросы</div>
           </div>
         </div>

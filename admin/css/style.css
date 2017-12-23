@@ -103,6 +103,7 @@ div.clear{clear: both; height: 1px; width: 100%;}
 	border:1px solid #ffffff;
 	width:100px;
 	white-space:nowrap;
+	text-align:right;
 }
 .tab_red td
 {

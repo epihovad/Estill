@@ -237,7 +237,7 @@ function set($name, $tbl='settings')
 	global $prx;
 
 	if(!$_SESSION['cache'][$tbl])
-		$_SESSION['cache'][$tbl] = getArr("SELECT id,`value` FROM {$prx}{$tbl} WHERE flag = 'client'");
+		$_SESSION['cache'][$tbl] = getArr("SELECT id,`value` FROM {$prx}{$tbl}");
 	
 	$val = $_SESSION['cache'][$tbl][$name];
 

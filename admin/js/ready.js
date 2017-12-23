@@ -156,7 +156,7 @@ function CKEditor()
 				height: $(this).height(),
 				removePlugins: toolbar == 'Full' ? '' : 'elementspath',
 				resize_enabled: toolbar == 'Full',
-				contentsCss: '/css/CK.css?v=20170925',
+				contentsCss: '/css/CK.css?v=20171223',
 				coreStyles_bold: { element : 'b' },
 				coreStyles_italic: { element : 'i' },
 				skin: 'v2',

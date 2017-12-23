@@ -83,6 +83,23 @@ jQuery(document).ready(function( $ ) {
     }
   });
   //
+  $('.fb-frm').click(function(){
+    var tp = $(this).attr('tp');
+    tp = tp ? tp : 'msg';
+    jPop('/inc/actions.php?show=feedback&type='+tp);
+    return false;
+  });
+  //
+  $('.fnews .btn').click(function(){ $(this).addClass('disabled'); inajax('/inc/actions.php?action=subscribe','mail='+$('.fnews input').val()); return false; });
+  //
+  //
+  $('.tocart-mini').click(function(){
+    var mod = $(this).attr('mod');
+    $(this).addClass('disabled');
+    toCart(mod,1);
+    return false;
+  });
+  //
   /*$('.main #lnk17').click(function(){
     $('html:not(:animated),body:not(:animated)').animate({scrollTop:$('h1.catalog').offset().top-75},500,function(){});
     return false;
@@ -96,8 +113,7 @@ jQuery(document).ready(function( $ ) {
   $('.bmain a[pid="16"]').click(function(){ jPop('/inc/actions.php?show=feedback'); return false; });
   //
   $('.bmain a[pid="lc"]').click(function(){ jPop('/inc/actions.php?show=auth'); return false; });
-  //
-  $('.Subscribe .btn').click(function(){ inajax('/inc/actions.php?action=subscribe','mail='+$('.Subscribe input').val()); return false; });
+
   //$(document).jAlert('show','confirm','Товар добавлен к Вашему заказу.<br>Вы желаете перейти в корзину?',function(){top.location.href='/cart.php'});*/
 });
 
@@ -109,7 +125,7 @@ function jPop(url) {
       type:'GET',
       cache: false,
       success:function(data, el, responce){
-        data.body.html(jQuery('<div class="box-modal"><div class="box-modal_close arcticmodal-close">X</div>' + responce + '</div>'));
+        data.body.html(jQuery('<div class="box-modal"><div class="box-modal_close arcticmodal-close glyphicon glyphicon-remove"></div>' + responce + '</div>'));
       }
     }
   });

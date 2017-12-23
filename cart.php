@@ -37,13 +37,14 @@ if(isset($_GET['action']))
 
 			?>
 			<script>
-        top.jQuery('.hcart .cnt').html('<?=$_SESSION['cart']['quant']?>');
+        top.jQuery('#cart span').html('<?=$_SESSION['cart']['quant']?>');
 				top.jQuery(document).jAlert('show','confirm',
-					'Отлично! Товар практически у Вас в руках!<br>Осталось оформить покупку, что скажете?',
+					'Товар добавлен к Вашему заказу<br>Желаете перейти к оформлению?',
 					function(){top.location.href='/cart.php'},
-					{b_confirm : {b1:'Поехали!',b2:'Позже'}}
+					{b_confirm : {b1:'Оформить',b2:'Позже'}}
 				);
 				top.jQuery('.tocart').removeClass('disabled');
+        top.jQuery('.tocart-mini[mod="<?=$id?>"]').removeClass('disabled');
 			</script>
 			<?
 			break;

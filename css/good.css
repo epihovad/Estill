@@ -7,21 +7,21 @@
 .gim .gim-other .im:hover, .gim .gim-other .im.active { box-shadow:0 0 5px #006cc3; }
 
 .good-preview { float:left; width:305px; padding-left:15px; }
-.good-preview .h { font:normal 20px/1 'Alegreya Sans', sans-serif; color:#004687; padding-bottom:10px;}
+.good-preview .h { font:normal 20px/1 'Source Sans Pro', sans-serif; color:#004687; padding-bottom:10px;}
 .good-preview .info { padding-bottom:10px; font-size:14px;}
 
 .good-prm { float:right; width:300px; text-align:right;}
-.good-prm .lb { float:left; font:normal 20px/30px 'Alegreya Sans', sans-serif; color:#313132;}
+.good-prm .lb { float:left; font:normal 20px/30px 'Source Sans Pro', sans-serif; color:#313132;}
 .good-prm .price { font:normal 24px/30px Arial, Helvetica, sans-serif; color:#01a6ff;}
 .good-prm .note { clear:both; font-size:12px; line-height:1; color:#999999; text-align:left; padding-top:10px; width:160px;}
 .good-prm .sep { clear:both; font-size:0; padding:10px 0 0; margin:0 0 10px 0; border-bottom:1px solid #ebebeb; background:none;}
-.good-prm select { width:auto; float:right; color:#313132; font-size:16px;}
+.good-prm select { width:auto; float:right; color:#313132; font-size:16px; padding:4px 12px 6px 12px;}
 .good-prm .input-group { width:60px; margin-top:-3px; float:right;}
 .good-prm .tocart { margin-top:15px; padding-right:46px;}
 .good-prm .tocart span { position:absolute; margin:0 0 0 8px; font-size:0; width:22px; height:22px; float:right; background:url(/img/tocart.png) no-repeat;}
 
 .good-info { padding-top:30px;}
-.good-info .h { font:normal 20px/1 'Alegreya Sans', sans-serif; color:#004687; padding-bottom:20px;}
+.good-info .h { font:normal 20px/1 'Source Sans Pro', sans-serif; color:#004687; padding-bottom:20px;}
 
-.good-similar .h { font: normal 36px 'Alegreya Sans', sans-serif; margin: 20px auto 20px; color: #313132; text-align: center;}
+.good-similar .h { font: normal 36px 'Source Sans Pro', sans-serif; margin: 20px auto 20px; color: #313132; text-align: center;}
 .good-similar .h + .sep { width:100px; margin:0 auto 20px auto;}

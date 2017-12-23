@@ -120,7 +120,7 @@ if(@mysql_num_rows($r)){
             </a>
             <div class="clear"></div>
             <div class="price"><?=number_format($mod['price'],0,',',' ')?> руб.</div>
-            <div class="btn btn-default tocart">в корзину<span></span></div>
+            <div class="btn btn-default tocart-mini" mod="<?=$mod['id']?>">в корзину<span></span></div>
           </div>
         </div>
         <?

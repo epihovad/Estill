@@ -70,6 +70,7 @@ if(isset($_GET['action']))
 
 			?><script>top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery.arcticmodal('close')});</script><?
 			break;
+
 		// ------------------- Форма обратной связи
 		case 'feedback':
 			foreach($_REQUEST as $k=>$v)
@@ -108,6 +109,7 @@ if(isset($_GET['action']))
 
 			?><script>top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery.arcticmodal('close')});</script><?
 			break;
+
 		// ------------------- Подписка на рассылку
 		case 'subscribe':
 			foreach($_REQUEST as $k=>$v)
@@ -139,14 +141,14 @@ if(isset($_GET['action']))
 			}
 
 			// мылим админу
-			//mailTo(set('admin_mail'), 'Подписка', 'У нас новый подписчик:<br>'.$mail, set('admin_mail'));
+			mailTo(set('admin_mail'), 'Подписка', 'У нас новый подписчик:<br>'.$mail, set('admin_mail'));
 
-			?><script>top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery('.Subscribe input').val('')});</script><?
-			break;
-		// ------------------- Авторизация
-		case 'auth':
-			$alert = 'В данный момент на сайте ведутся технические работы.<br>Администрация сайта приносит Вам свои извинения за неудобства.';
-			?><script>top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery('.Subscribe input').val('')});</script><?
+			?>
+      <script>
+        top.jQuery('.fnews .btn').removeClass('disabled');
+        top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery('.fnews input').val('')});
+      </script>
+      <?
 			break;
 	}
 	exit;
@@ -199,65 +201,60 @@ if(isset($_GET['show']))
 			break;
 		// ------------------- Форма обратной связи
 		case 'feedback':
-			?>
+			$type = $_GET['type'];
+			$h3 = '';
+		  switch ($type){
+        case 'phone': $h3 = 'Позвоните нам по бесплатному телефону <span>'.set('phone').'</span><br>или просто оставьте сообщение'; break;
+				case 'email': $h3 = 'Напишите нам на E-mail:<br><span>'.nl2br(set('email')).'</span><br>или просто оставьте сообщение'; break;
+        case 'cns':   $h3 = 'Закажите бесплатную консультацию'; break;
+        default:      $h3 = 'Оставьте нам сообщение'; break;
+      }
+		  ?>
 			<style>
-				#frm-feedback {text-align:center; width:385px;}
-				#frm-feedback h3 {margin: 0px 0px 20px;}
-				#frm-feedback .form-control { width:100%;}
-				#frm-feedback textarea { resize:none; font:16px 'Roboto Condensed', sans-serif;}
-			</style>
+				#frm-fb {text-align:center; width:385px;}
+				#frm-fb h3 {margin: 0px 0px 20px;}
+        #frm-fb h3 span { color:#313132; display:inline-block; padding-bottom:15px;}
+				#frm-fb .form-control { width:100%;}
+				#frm-fb textarea { resize:none; }
+      </style>
 
-			<form id="frm-feedback" action="/inc/actions.php?action=feedback" class="frm" target="ajax" method="post">
-				<h3>Оставьте нам сообщение</h3>
+			<form id="frm-fb" action="/inc/actions.php?action=feedback" class="frm" target="ajax" method="post">
+				<h3><?=$h3?></h3>
 				<div class="input-group">
 					<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
 					<input class="form-control" placeholder="Как к Вам обращаться?" name="name" type="text">
 				</div>
 				<div class="clear" style="padding-bottom:10px;"></div>
+        <? if($type == 'cns'){?>
+        <div class="input-group">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>
+          <input class="form-control" placeholder="+7 (___) ___-__-__" name="phone" type="text">
+        </div>
+        <div class="clear" style="padding-bottom:10px;"></div>
+        <?} else {?>
 				<div class="input-group">
 					<span class="input-group-addon">@</span>
 					<input class="form-control" placeholder="Введите Ваш Email адрес" name="mail" type="text">
 				</div>
 				<div class="clear" style="padding-bottom:10px;"></div>
+        <?}?>
 				<div class="input-group">
 					<span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
 					<textarea class="form-control" placeholder="Введите Ваше сообщение" rows="4" name="text"></textarea>
 				</div>
 				<div class="clear" style="padding-top:15px;"></div>
-				<div class="btn btn-mini" onclick="jQuery('#frm-feedback').submit();"><div>Отправить</div></div>
+				<div class="btn btn-mini" onclick="jQuery('#frm-fb').submit();"><div>Отправить</div></div>
         <div class="hdn"><input type="text" name="hdn" value=""></div>
 			</form>
-			<?
-			break;
-		// ------------------- Авторизация
-		case 'auth':
-			?>
-			<style>
-				#frm-auth {text-align:right; width:385px;}
-				#frm-auth h3 {margin: 0px 0px 20px; text-align:center;}
-				#frm-auth .form-control { width:100%;}
-				#frm-auth .forgot { padding-right:15px;}
-				#frm-auth .notes { border-top: 1px solid #ccc; font-size: 12px; font-style: italic; margin-top: 15px; padding: 5px 0 0; text-align: right;}
-			</style>
-
-			<form id="frm-auth" action="/inc/actions.php?action=auth" class="frm" target="ajax" method="post">
-				<h3>Вход в личный кабинет</h3>
-				<div class="input-group">
-					<span class="input-group-addon">@</span>
-					<input class="form-control" placeholder="Введите Ваш Email адрес" name="mail" type="text">
-				</div>
-				<div class="clear" style="padding-bottom:10px;"></div>
-				<div class="input-group">
-					<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-					<input class="form-control" placeholder="Введите Ваш пароль" name="pass" type="password">
-				</div>
-				<div class="clear" style="padding-top:15px;"></div>
-				<?/*<div class="forgot" style="display:inline-block;"><a href="">Забыли пароль?</a></div>*/?>
-				<div class="btn btn-mini" onclick="jQuery('#frm-auth').submit();"><div>Войти</div></div>
-				<div class="notes">Только наши покупатели могут войти в свой личный кабинет</div>
-        <div class="hdn"><input type="text" name="hdn" value=""></div>
-			</form>
-			<?
+			<?if($type == 'cns'){?>
+      <script src="/js/jquery/inputmask.min.js"></script>
+      <script src="/js/jquery/inputmask.phone.extensions.min.js"></script>
+      <script>
+        jQuery(document).ready(function( $ ) {
+          Inputmask({mask: '+7 (999) 999-99-99',showMaskOnHover: false}).mask($('#frm-fb input[name="phone"]'));
+        });
+      </script>
+      <?}
 			break;
 	}
 	exit;

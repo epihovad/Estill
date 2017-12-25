@@ -7,7 +7,8 @@ if(isset($_GET['action']))
 	switch($_GET['action'])
 	{
 		// -------------- ДОБАВЛЕНИЕ ТОВАРА В КОРЗИНУ
-		case 'tocart':
+		case 'add':
+
 		  //unset($_SESSION['cart']); exit;
 			$id = (int)$_GET['mod'];
 			$kol = (int)$_GET['quant'];
@@ -22,6 +23,8 @@ if(isset($_GET['action']))
 			  'quant'     => $kol,
         'price'     => $mod['price'],
 				'amount'    => $kol * $mod['price'],
+        'shelf'     => (int)$_GET['shelf'],
+        'good_link' => $good['url'].$good['link'].'.htm',
         'good_name' => $good['name'],
         'mod_name'  => $mod['name']
       );
@@ -40,7 +43,7 @@ if(isset($_GET['action']))
         top.jQuery('#cart span').html('<?=$_SESSION['cart']['quant']?>');
 				top.jQuery(document).jAlert('show','confirm',
 					'Товар добавлен к Вашему заказу<br>Желаете перейти к оформлению?',
-					function(){top.location.href='/cart.php'},
+					function(){top.location.href='/cart/'},
 					{b_confirm : {b1:'Оформить',b2:'Позже'}}
 				);
 				top.jQuery('.tocart').removeClass('disabled');
@@ -67,152 +70,180 @@ if(isset($_GET['action']))
 
 			if(!$quant){
         unset($_SESSION['cart']);
-        ?><script>top.location.href = '/cart.php'</script><?
+        ?><script>top.location.href = '/cart/'</script><?
         exit;
       }
 
 			$_SESSION['cart']['quant'] = $quant;
 			$_SESSION['cart']['total'] = $total;
 
-			$dtype = $_POST['dtype'];
-			$ptype = $_POST['ptype'];
-			$itogo = $_SESSION['cart']['total'];
-
-			if(!$dtype) $itogo += 350;
-			if($dtype == 1) $itogo += 650;
-			if($ptype == 1) $itogo = round($itogo/2);
-
-			ob_start();
-			$i=1;
-			foreach ($_SESSION['cart']['mods'] as $mod){
-				?><div><b><?=$i++?></b>. <?=$mod['good_name']?> (<?=$mod['mods_type']?>: <?=$mod['mod_name']?>) &mdash; <span class="price"><?=$mod['quant']?></span> <span class="rub">шт.</span> <span class="price"><?=$mod['amount']?></span> <span class="rub">руб</span></div><?
-			}
-			$order_list = ob_get_clean();
-
       ?>
       <script>
-        top.jQuery('.hcart .cnt').html('<?=$_SESSION['cart']['quant']?>');
-        top.jQuery('tr.total').find('td').eq(0).html('<?=number_format($_SESSION['cart']['total'],0,',',' ')?> <span class="rub">руб</span>');
-        top.jQuery('#order-list .td').html('<?=cleanJS($order_list)?>');
-        top.jQuery('#order-tatal .itogo').html('<?=number_format($itogo,0,',',' ')?> <span class="rub">руб</span>');
-        top.jQuery('#order .row').removeClass('wait');
+        top.jQuery('#cart span').html('<?=$_SESSION['cart']['quant']?>');
+        top.jQuery('tr.total .c6').html('<?=price($_SESSION['cart']['total'])?> руб.');
+        <? foreach ($_SESSION['cart']['mods'] as $mod_id => $none){?>
+        top.jQuery('tr[mod="<?=$mod_id?>"] .c6').html('<?=price($_SESSION['cart']['mods'][$mod_id]['amount'])?> руб.');
+        <?}?>
       </script>
       <?
       break;
 
-		// -------------- СМЕНА ПАРАМЕТРОВ ЗАКАЗА
-    case 'total':
-      switch ((int)$_GET['step'])
-      {
-				// контактная информация
-				case 3:
-				  ob_start();
-				  ?>
-          <div class="cell th">Контактная информация:</div>
-          <div class="cell td">
-            <b>Имя</b>: <?=$_POST['user']['name']?>;<br>
-            <b>E-mail</b>: <?=$_POST['user']['email']?>;<br>
-            <b>Телефон</b>: <?=$_POST['user']['phone']?>;<br>
-            <b>Адрес доставки</b>: <?=$_POST['user']['address']?>;<br>
-            <b>Почтовый индекс</b>: <?=$_POST['user']['index']?>
-          </div>
-          <?
-				  $data = ob_get_clean();
-				  ?>
-          <script>
-            top.jQuery('#order-contacts').html('<?=cleanJS($data)?>');
-            top.jQuery('#order .row').removeClass('wait');
-          </script>
-          <?
-					break;
-				// способ доставки
-				case 4:
-				  $dtype = $_GET['dtype'];
-					$ptype = $_GET['ptype'];
-
-					ob_start();
-          ?><div class="cell th">Способ доставки:</div><?
-          switch ($dtype){
-            default:  ?><div class="cell td">Доставка «Почта России» &mdash; <span class="price">350</span> <span class="rub">руб</span></div><? break;
-            case '1': ?><div class="cell td">Курьерская Доставка EMS &mdash; <span class="price">650</span> <span class="rub">руб</span></div><? break;
-						case '2': ?><div class="cell td">Доставка транспортной компанией &mdash; <span class="cmt">доставки оплачивается отдельно</span></div><? break;
-          }
-					$data = ob_get_clean();
-
-					$itogo = $_SESSION['cart']['total'];
-					if(!$dtype) $itogo += 350;
-					if($dtype == 1) $itogo += 650;
-					if($ptype == 1) $itogo = round($itogo/2);
-
-					?>
-          <script>
-            top.jQuery('#order-delivery').html('<?=cleanJS($data)?>');
-            <? if($dtype){ ?>
-              top.jQuery('#order-payment').html('<div class="cell th">Способ доставки:</div><div class="cell td">100% предоплата &mdash; <span class="cmt">реквизиты для перевода мы отправим Вам после оформления заказа</span></div>');
-            <?}?>
-            top.jQuery('#order-tatal .itogo').html('<?=number_format($itogo,0,',',' ')?> <span class="rub">руб</span>');
-            top.jQuery('#order .row').removeClass('wait');
-          </script>
-					<?
-					break;
-				// способ оплаты
-				case 5:
-					$ptype = $_GET['ptype'];
-					$dtype = $_GET['dtype'];
-
-					ob_start();
-					?><div class="cell th">Способ оплаты:</div><?
-					switch ($ptype){
-						default:  ?><div class="cell td">100% предоплата &mdash; <span class="cmt">реквизиты для перевода мы отправим Вам после оформления заказа</span></div><? break;
-						case '1': ?><div class="cell td">50% предоплата &mdash; <span class="cmt">реквизиты для перевода мы отправим Вам после оформления заказа</span></div><? break;
-						case '2': ?><div class="cell td">Оплата наличными &mdash; <span class="cmt">оплата производится непосредственно в момент получения заказа</span></div><? break;
-					}
-					$data = ob_get_clean();
-
-					$itogo = $_SESSION['cart']['total'];
-					if(!$dtype) $itogo += 350;
-					if($dtype == 1) $itogo += 650;
-					if($ptype == 1) $itogo = round($itogo/2);
-
-					?>
-          <script>
-            top.jQuery('#order-payment').html('<?=cleanJS($data)?>');
-            top.jQuery('#order-tatal .itogo').html('<?=number_format($itogo,0,',',' ')?> <span class="rub">руб</span>');
-            top.jQuery('#order .row').removeClass('wait');
-          </script>
-					<?
-					break;
-      }
-
-      break;
-
 		// -------------- СОХРАНЕНИЕ ЗАКАЗА
 		case 'save':
-			//jAlert('сохраняем заказ');
-			pre($_POST);
-			break;
 
-		// -------------- ОПЛАТА ЗАКАЗА ПО БЕЗНАЛУ
-		case 'pay':
-			if(!$id = (int)$_GET['id']) exit;
-			if(!$order = gtv('orders','id,id_restaurant,cost,date',$id)) exit;
-			if(!$order['cost'] || (!$_SESSION['user'] && !$_SESSION['splinks']['orderpay']['user'])) exit;
+			if(!$_SESSION['cart']) exit;
 
-			$pay = (float)str_replace(',','.',$order['cost']);
-			$id = update('restaurant_pay', "date=NOW(), id_restaurant='{$order['id_restaurant']}', id_orders='{$order['id']}', pay='{$pay}', text='оплата заказа', status='0'");
-			if(!$id) exit;
+		  foreach ($_POST['user'] as $k => $v)
+        $$k = clean($v);
+
+			$jAlert_js = "top.jQuery('.btn.oform').removeClass('disabled');";
+
+			// проверка обязательных полей
+			if(!$name) jAlert('Пожалуйста, введите Ваше ФИО');
+			if(!check_mail($email)) jAlert('Некорректный E-mail');
+			$phone = substr(preg_replace("/\D/",'',$phone), -10);
+			if(strlen($phone) != 10) jAlert('Некорректный номер телефона');
+
+			$callme = (int)$_POST['callme'];
+			$sendmail = (int)$_POST['sendmail'];
+			$subscribe = (int)$_POST['subscribe'];
+
+			// регим пользователя
+			if(!$id_user = $_SESSION['user']['id'])
+			{
+			  if(!$id_user = getField("SELECT * FROM {$prx}users WHERE email='{$email}'")){
+			    $pass = get_new_pass();
+          if($id_user = update('users',"name='{$name}',email='{$email}',pass=md5('{$pass}'),phone='{$phone}'")){
+            /*$_SESSION['user'] = gtv('users','*',$id_user);
+
+            // отправляем письмо пользователю
+            $tema  = "Регистрация на сайте {$_SERVER['SERVER_NAME']}";
+            $text  = "Уважаемый <b>{$name}</b>,<br><br>Вы зарегистрировались на сайте <a href='http://{$_SERVER['SERVER_NAME']}'>{$_SERVER['SERVER_NAME']}</a>.<br>";
+            $text .= "Ваш E-mail: <b>{$email}</b><br>";
+            $text .= "Ваш пароль: <b>{$pass}</b>";
+            mailTo($email,$tema,$text,set('admin_mail'));
+            */
+            // журнал
+            update('log',"text='зарегистрирован новый пользователь',link='users.php?red={$id_user}'");
+          }
+			  }
+
+			}
+
+			// добавляем в подписку
+			if($subscribe){
+			  sql("INSERT INTO {$prx}subscribers SET email = '{$email}' ON DUPLICATE KEY UPDATE unsubscribe_date=NULL");
+			}
+
+			// информация о клиенте
+			$user_info  = '';
+			$user_info .= "<b>ФИО</b>: {$name}<br>";
+			$user_info .= "<b>E-mail</b>: {$email}<br>";
+			$user_info .= "<b>Телефон</b>: +7{$phone}<br>";
+			if($index = clean($_POST['user']['index'],true))
+				$user_info .= "<b>Почтовый индекс</b>: {$index}<br>";
+			if($address = clean($_POST['user']['address'],true))
+				$user_info .= "<b>Адрес доставки</b>: {$address}<br>";
+			if($notes = clean($_REQUEST['notes'],true))
+				$user_info .= "<b>Примечание к заказу</b>: {$notes}";
+
+			// информация о заказе
+			$order_info = '';
+
+			ob_start();
+			?><table cellpadding="5" cellspacing="0" border="1"><thead><tr><th width="20">№</th><th>Наименование</th><th>Цена (руб.)</th><th>Кол-во</th><th>Стоимость (руб.)</th></tr></thead><?
+			$table = ob_get_clean();
+
+			ob_start();
+			?><table class="subtab"><thead><tr><th width="20">№</th><th>Наименование</th><th>Цена (руб.)</th><th>Кол-во</th><th>Стоимость (руб.)</th></tr></thead><?
+			$order_info = ob_get_clean();
+
+			$mods = array();
+			$n=1;
+			$table .= '<tbody>';
+			$order_info .= '<tbody>';
+			foreach($_SESSION['cart']['mods'] as $mod_id => $arr)
+			{
+				ob_start();
+				?>
+				<tr>
+					<th><?=$n++?></th>
+					<td align="left">
+					  <a href="http://<?=$_SERVER['SERVER_NAME'].$_SESSION['cart']['mods'][$mod_id]['good_link']?>"><?=$_SESSION['cart']['mods'][$mod_id]['good_name']?></a><br>
+					  размер: <span><?=$_SESSION['cart']['mods'][$mod_id]['mod_name']?>, <?=$_SESSION['cart']['mods'][$mod_id]['shelf']?'с полочкой':'без полочки'?>
+					</td>
+					<td align="right"><?=price($_SESSION['cart']['mods'][$mod_id]['price'])?></td>
+					<td align="center"><?=$arr['quant']?></td>
+					<td align="right"><?=price($arr['amount'])?></td>
+				</tr>
+				<?
+				$data = ob_get_clean();
+				$table .= $data;
+				$order_info .= $data;
+			}
+
+			$table .= '</tbody>';
+			$order_info .= '</tbody>';
+
+			ob_start();
 			?>
-			<form method="POST" action="https://merchant.roboxchange.com/Index.aspx" id="frmPay" target="_top">
-			<!--form method="POST" action="http://test.robokassa.ru/Index.aspx" id="frmPay" target="_top"-->
-				<input type="hidden" name="MrchLogin" value="<?=$robokassa['login']?>">
-				<input type="hidden" name="OutSum" value="<?=$pay?>">
-				<input type="hidden" name="InvId" value="<?=$id?>">
-				<textarea name="Desc">Оплата заказа №<?=$order['id']?> от <?=date('d.m.Y H:i', strtotime($order['date']))?></textarea>
-				<input type="hidden" name="ShpTypePay" value="order">
-				<input type="hidden" name="SignatureValue" value="<?=md5("{$robokassa['login']}:{$pay}:{$id}:{$robokassa['pwd1']}:ShpTypePay=order")?>">
-			</form>
-			<script>document.getElementById('frmPay').submit();</script>
+			  <tfoot>
+          <tr>
+            <td align="right" colspan="4"><b>Итого</b></td>
+            <td align="right"><b><?=price($_SESSION['cart']['total'])?></b></td>
+          </tr>
+				</tfoot>
+			</table>
 			<?
+			$data = ob_get_clean();
+			$table .= $data;
+			$order_info .= $data;
+
+			// сохраняем заказ
+			$set = "id_user='{$id_user}',
+			        email='{$email}',
+			        phone='{$phone}',
+			        order_info='".clean($order_info)."',
+			        order_info_html='".(clean($table))."',
+			        user_info='{$user_info}',
+			        cost='{$_SESSION['cart']['total']}',
+			        notes='{$notes}',
+			        sendmail='{$sendmail}',
+			        callme='{$callme}'";
+
+			if(!$id_order = update('orders',$set)){
+			  jAlert('Во время сохранения данных произошла ошибка.<br>Администрация сайта приносит Вам свои извинения.<br>Мы уже знаем об этой проблеме и работаем над её устранением.');
+			}
+
+			$_SESSION['orders'][] = $id_order;
+
+			// журнал
+      update("log","text='новый заказ',link='orders.php?red={$id_order}'");
+
+			// мылим
+      $subj = 'Заказ №'.$id_order.' от '.date('d.m.Y').' с сайта '.$_SERVER['SERVER_NAME'];
+      ob_start();
+        ?>
+        <h2>Заказ №<?=$id_order?> от <?=date('d.m.Y')?></h2>
+        <h3 style="margin-bottom:5px;">Покупатель:</h3>
+        <div style="margin-bottom:10px;"><?=$user_info?></div>
+        <h3 style="margin-top:5px;">Информация о заказе:</h3>
+        <?=$table?>
+        <?
+      $text = ob_get_clean();
+
+      mailTo(set('admin_mail'),$subj,$text,$email); // админу
+      mailTo($email,$subj,$text,set('admin_mail')); // клиенту
+
+      unset($_SESSION['cart']);
+
+      $message  = 'Уважаемый(ая) '.$name.'!';
+      $message .= '<br>Номер Вашего заказа: <b>'.$id_order.'</b> от <b>'.date('d.m.Y').'</b>';
+      $message .= '<br>Заказ отправлен в отдел продаж.';
+      $message .= '<br>Благодарим Вас за обращение в нашу Компанию.';
+
+      ?><script>top.jQuery(document).jAlert('show','alert','<?=$message?>',function(){top.location.href='/cart/?show=res&order=<?=$id_order?>'});</script><?
+
 			break;
 	}
 	exit;
@@ -224,10 +255,9 @@ $const['css_links'] = ob_get_clean();
 
 ob_start();
 ?>
-	<script src="/js/jquery/inputmask.min.js"></script>
-	<script src="/js/jquery/inputmask.phone.extensions.min.js"></script>
-  <?/*<script src="/js/jquery/form.min.js"></script>*/?>
-  <script src="/js/cart.js"></script>
+<script src="/js/jquery/inputmask.min.js"></script>
+<script src="/js/jquery/inputmask.phone.extensions.min.js"></script>
+<script src="/js/cart.js"></script>
 <?
 $const['js_links'] = ob_get_clean();
 
@@ -240,291 +270,181 @@ switch(@$_GET['show'])
 	default:
 
 		if(!$_SESSION['cart']){
-			header('Location: /cart.php?show=empty');
+			header('Location: /cart/?show=empty');
 			exit;
 		}
 
+		$navigate = 'Оформление заказа';
+
 		?>
-		<div class="pd25">
+    <h1>Оформление заказа</h1>
+    <form id="frm-order" action="/cart/?action=save" target="ajax" method="post">
 
-      <form id="frm-order" action="/cart.php?action=save" class="frm" target="ajax" method="post">
+      <h2 style="margin-top:40px;">Информация о заказе</h2>
+      <table class="cart">
+        <thead>
+          <tr>
+            <th class="c1">№</th>
+            <th class="c2">Фото</th>
+            <th class="c3">Наименование</th>
+            <th class="c4">Цена</th>
+            <th class="c5">Кол-во</th>
+            <th class="c6">Стоимость</th>
+            <th class="cell-fake"></th>
+          </tr>
+        </thead>
+        <tbody>
+				<?
+				$ids_mods = implode(',', array_keys($_SESSION['cart']['mods']));
+				//$mods = array();
+				$r = sql("SELECT * FROM {$prx}mods WHERE id IN ({$ids_mods})");
+				$i=1;
+				while ($mod = mysql_fetch_assoc($r)){
+					$good = gtv('goods','*',$mod['id_good']);
+					$quant = $_SESSION['cart']['mods'][$mod['id']]['quant'];
+					$price = $_SESSION['cart']['mods'][$mod['id']]['price'];
+					$amount = $_SESSION['cart']['mods'][$mod['id']]['amount'];
+					$shelf = $_SESSION['cart']['mods'][$mod['id']]['shelf'];
+					?>
+          <tr mod="<?=$mod['id']?>" class="row-mod">
+            <td class="c1"><?=$i++?></td>
+            <td class="c2">
+              <a href="/goods/<?=$good['id']?>.jpg" rel="nofollow" title="<?=htmlspecialchars($good['name'].' (размер: '.$mod['name'].', '.($shelf?'с полочкой':'без полочки').')')?>">
+                <img src="/goods/45x45/<?=$good['id']?>.jpg">
+              </a>
+            </td>
+            <td class="c3"><?=$good['name']?><div>размер: <span><?=$mod['name']?></span>, <span><?=$shelf?'с полочкой':'без полочки'?></span></div></td>
+            <td class="c4"><?=price($price)?> руб.</td>
+            <td class="c5"><?=chQuant('quant['.$mod['id'].']', $quant)?></td>
+            <td class="c6"><?=price($amount)?> руб.</td>
+            <td class="c7"><a href="" rel="nofollow" class="gdel glyphicon glyphicon-remove"></a></td>
+          </tr>
+					<?
+				}
+				?>
+        </tbody>
+        <tfoot>
+          <tr class="total">
+            <th colspan="5">Итого</th>
+            <td class="c6"><?=price($_SESSION['cart']['total'])?> руб.</td>
+            <td class="cell-fake"></td>
+          </tr>
+        </tfoot>
+      </table>
 
-        <h1>Оформление заказа</h1>
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-head">Информация о заказе:</div>
-          <div class="step-right">
-            <div class="step-note content">
-              <p>Здесь Вам предлагается проверить список своих покупок.</p>
-              <p>Возможно Вы что-нибудь забыли или желаете получить хорошую скидку, воспользовавшись специальными акциями, которые приятно повлияют на итоговую стоимость всего заказа:</p>
-              <ul>
-                <li>скидка на весь заказ, при наборе товара на определённую сумму;</li>
-                <li>скидка на основной товар, при условии приобретения сопутствующего товара;</li>
-              </ul>
-            </div>
-          </div>
-          <div class="step-left">
-            <div class="cart">
-              <table>
-                <thead>
-                  <tr>
-                    <th class="c1">№</th>
-                    <th class="c2">Модель/Цвет</th>
-                    <th class="c3">Наименование товара</th>
-                    <th class="c4">Цена</th>
-                    <th class="c5">Кол-во</th>
-                    <th class="c6">Стоимость</th>
-                    <th class="c7">Скидка</th>
-                    <th class="c8">Итоговая стоимость</th>
-                    <th class="cell-fake"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                <?
-                $ids_mods = implode(',', array_keys($_SESSION['cart']['mods']));
-                //$mods = array();
-                $r = sql("SELECT * FROM {$prx}mods WHERE id IN ({$ids_mods})");
-                $i=1;
-                while ($mod = mysql_fetch_assoc($r)){
-                  //$mods[$mod['id']] = $mod;
-                  $good = gtv('goods','*',$mod['id_good']);
-                  $quant = $_SESSION['cart']['mods'][$mod['id']]['quant'];
-                  $start_price = $mod['old_price'] ? $mod['old_price'] : $mod['price'];
-                  ?>
-                  <tr mod="<?=$mod['id']?>" class="row-mod">
-                    <td class="c1"><?=$i++?></td>
-                    <td class="c2"><a href="/mods/<?=$mod['id']?>.jpg" rel="nofollow" title="<?=htmlspecialchars($good['name'].' ('.$good['mods_type'].': '.$mod['name'].')')?>"><img src="/mods/45x45/<?=$mod['id']?>.jpg"></a></td>
-                    <td class="c3">Экшн-камера SJCAM SJ4000 WiFi<div><?=$good['mods_type']?>: <span><?=$mod['name']?></span></div></td>
-                    <td class="c4"><?=number_format($start_price,0,',',' ')?> <span class="rub">руб</span></td>
-                    <td class="c5"><?=chQuant('quant['.$mod['id'].']', $quant)?></td>
-                    <td class="c6"><?=number_format($start_price*$quant,0,',',' ')?> <span class="rub">руб</span></td>
-                    <td class="c7"><?=number_format(($start_price-$mod['price'])*$quant,0,',',' ')?> <span class="rub">руб</span></td>
-                    <td class="c8"><?=number_format($mod['price']*$quant,0,',',' ')?> <span class="rub">руб</span></td>
-                    <td class="c9"><div class="gdel"></div></td>
-                  </tr>
-                  <?
-                }
-                //cartGift();
-                ?>
-                </tbody>
-                <tfoot>
-                  <?/*<tr class="coupon">
-                    <th colspan="7">Скидочный купон:</th>
-                    <td><input type="text" name="coupon" value="" class="form-control mini" placeholder="Номер" maxlength="7"></td>
-                    <td class="cell-fake"></td>
-                  </tr>*/?>
-                  <tr class="total">
-                    <th colspan="7">Итого:</th>
-                    <td><?=number_format($_SESSION['cart']['total'],0,',',' ')?> <span class="rub">руб</span></td>
-                    <td class="cell-fake"></td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-          <div class="clear"></div>
+      <h2>Контактная информация</h2>
+
+      <div class="contacts-note content">
+        <p>Личная информация о наших клиентах строго конфиденциальна!</p>
+        <p>Нам нужны Ваши данные для того, чтобы Вы всегда могли получать такие важные уведомления как:</p>
+        <ul>
+          <li>уточнения по заказу;</li>
+          <li>статус заказа;</li>
+          <li>информация о горячих новинках;</li>
+          <li>информация об актуальных акциях.</li>
+        </ul>
+        <p>СПАМ мы не рассылаем!<br>После регистрации Вы можете в личном кабинете выполнить настройку уведомлений.</p>
+        <div class="checkbox" style="margin:0; color:#999;">
+          <label>
+            <input type="checkbox" name="sendmail" value="1" checked> я хочу получать уведомления об изменении статуса моего заказа по электронной почте
+          </label>
         </div>
-
-        <div class="step">
-          <div class="step-left">
-            <div class="step-num">2</div>
-            <div class="step-head">Выбор подарочного сувенира:</div>
-          </div>
-          <div class="step-right">
-            <div class="step-note content">
-              <p>В качестве бесплатного приложения к Вашей покупке, мы предлагаем выбрать один из предложенных вариантов.</p>
-            </div>
-          </div>
-          <div class="tile stype">
-            <input type="hidden" name="stype" value="0">
-            <div class="ch"></div>
-            <center>
-              <div class="item active">
-                <div class="im"><div><img src="/img/dtype-post.gif"></div></div>
-              </div>
-              <div class="item">
-                <div class="im"><div><img src="/img/dtype-ems.gif"></div></div>
-              </div>
-              <div class="item">
-                <div class="im"><div><img src="/img/dtype-tc.gif"></div></div>
-              </div>
-            </center>
-          </div>
-          <div class="clear"></div>
+        <div class="checkbox" style="margin:0; color:#999;">
+          <label>
+            <input type="checkbox" name="subscribe" value="1" checked> я не против получать дополнительную информацию по электронной почте
+          </label>
         </div>
+      </div>
 
-        <div class="step">
-          <div class="step-left">
-            <div class="step-num">3</div>
-            <div class="step-head">Способ доставки:</div>
-          </div>
-          <div class="step-right">
-            <div class="step-note content">
-              <p>Способ доставки, как и способ оплаты, тоже имеет несколько вариантов:</p>
-              <ul>
-                <li><b>доставка «Почта России»</b> - отправка посылки почтой России за счет получателя (Вас), или наложенным платежом другими словами;</li>
-                <li><b>курьерская доставка EMS</b> - это услуга экспресс-доставки писем и посылок. Отправления производятся во все города России и за рубеж в кратчайшие сроки. Одна из главных особенностей EMS – вручение отправлений непосредственно в руки адресату (Вам);</li>
-                <li><b>доставка транспортной компанией (ТК)</b> - мы сдаём груз в своём городе, указываем в какой город (где имеется склад ТК) доставить груз, и кому его отдать. Вы получаете груз в своём городе на складе ТК по паспорту.</li>
-              </ul>
-            </div>
-          </div>
-          <div class="tile dtype">
-            <input type="hidden" name="dtype" value="0">
-            <div class="ch"></div>
-            <center>
-              <div class="item active">
-                <div class="im"><div><img src="/img/dtype-post.gif"></div></div>
-              </div>
-              <div class="item">
-                <div class="im"><div><img src="/img/dtype-ems.gif"></div></div>
-              </div>
-              <div class="item blocked">
-                <div class="im"><div><img src="/img/dtype-tc.gif"></div></div>
-              </div>
-            </center>
-          </div>
-          <div class="clear"></div>
+      <div class="user-data">
+        <div class="fld"><label class="zv">Ваше ФИО</label><input type="text" name="user[name]" value="" class="form-control" placeholder="ФИО указывается полностью"></div>
+        <div class="fld"><label class="zv">Ваш E-mail</label><input type="text" name="user[email]" value="" class="form-control" placeholder="Адрес почтового ящика"></div>
+        <div class="fld"><label class="zv">Ваш телефон</label><input type="text" name="user[phone]" value="" class="form-control" placeholder="+7 (___) ___-__-__"></div>
+        <div class="fld"><label>Почтовый индекс</label><input type="text" name="user[index]" value="" class="form-control" placeholder="Почтовый индекс"></div>
+        <div class="fld"><label>Ваш адрес</label><input type="text" name="user[address]" value="" class="form-control" placeholder="Адрес доставки"></div>
+        <?/*<div class="fld">
+          <label>Ваш пароль:</label><input type="password" name="user[pwd]" value="" class="form-control" placeholder="минимум 6 символов">
+          <span>необходим для входа в личный кабинет</span>
         </div>
+        <div class="fld"><label>Повторите пароль:</label><input type="password" name="user[pwd-retry]" value="" class="form-control"></div>*/?>
+        <div class="fld"><label>Примечание к заказу</label><textarea name="user[notes]" class="form-control" rows="5" placeholder="Ваш комментарий к заказу"></textarea></div>
+      </div>
 
-        <div class="step">
-          <div class="step-left">
-            <div class="step-num">4</div>
-            <div class="step-head">Контактная информация:</div>
-          </div>
-          <div class="step-right">
-            <div class="step-note content">
-              <p>Личная информация о наших клиентах строго конфиденциальна!</p>
-              <p>Нам нужны Ваши данные для того, чтобы Вы всегда могли получать такие важные уведомления как:</p>
-              <ul>
-                <li>уточнения по заказу;</li>
-                <li>статус заказа;</li>
-                <li>информация о горячих новинках;</li>
-                <li>информация об актуальных акциях.</li>
-              </ul>
-              <p>СПАМ мы не рассылаем!<br>После регистрации Вы можете в личном кабинете выполнить настройку уведомлений.</p>
-            </div>
-          </div>
-          <div class="step-left">
-            <div class="user-data">
-              <div class="fld">
-                <label>Ваше ФИО:</label><input type="text" name="user[name]" value="" class="form-control" placeholder="ФИО указывается полностью">
-                <span>ФИО человека, который будет забирать посылку</span>
-              </div>
-              <div class="fld"><label>Ваш E-mail:</label><input type="text" name="user[email]" value="" class="form-control" placeholder="Адрес почтового ящика"></div>
-              <div class="fld"><label>Ваш телефон:</label><input type="text" name="user[phone]" value="" class="form-control" placeholder="+7 (___) ___-__-__"></div>
-              <div class="fld"><label>Ваш адрес:</label><input type="text" name="user[address]" value="" class="form-control" placeholder="Адрес доставки"></div>
-              <div class="fld">
-                <label>Индекс:</label><input type="text" name="user[index]" value="" class="form-control" placeholder="Почтовый индекс">
-                <span>индекс почтового отделения, где Вы будете забирать посылку</span>
-              </div>
-              <div class="fld">
-                <label>Ваш пароль:</label><input type="password" name="user[pwd]" value="" class="form-control" placeholder="минимум 6 символов">
-                <span>необходим для входа в личный кабинет</span>
-              </div>
-              <div class="fld"><label>Повторите пароль:</label><input type="password" name="user[pwd-retry]" value="" class="form-control"></div>
-              <div class="fld"><label>Примечание к заказу:</label><textarea name="user[notes]" class="form-control" rows="5" placeholder="Ваш комментарий к заказу"></textarea></div>
-            </div>
-          </div>
-          <div class="clear"></div>
-        </div>
-
-        <div class="step">
-          <div class="step-left">
-            <div class="step-num">5</div>
-            <div class="step-head">Способ оплаты:</div>
-          </div>
-          <div class="step-right">
-            <div class="step-note content">
-              <p>Мы может предложить Вам очень гибкую систему оплаты Вашей покупки:</p>
-              <ul>
-                <li><b>100% предоплата</b> - в этом случае, мы подарим Вам дополнительную скидку 5% на весь заказ;</li>
-                <li><b>частичная предоплата в размере 50%</b> - часто этим способом пользуются клиенты, у которых в данный момент возникли временные финансовые трудности.
-                  Оставшаяся стоимость заказа оплачивается в момент получения посылки;</li>
-                <li><b>постоплата</b> - сейчас Вы ничего не платите, оплата производится непосредственно при получении посылки
-                  либо в Вашем почтовом отделении (наложенный платеж при доставке «Почтой России»), либо курьеру, в случае EMS доставки.</li>
-              </ul>
-            </div>
-          </div>
-          <div class="tile ptype">
-            <input type="hidden" name="ptype" value="0">
-            <div class="ch"></div>
-            <center>
-              <div class="item active">
-                <div class="im"><div><img src="/img/ptype-100.gif"></div></div>
-              </div>
-              <div class="item">
-                <div class="im"><div><img src="/img/ptype-50.gif"></div></div>
-              </div>
-              <div class="item">
-                <div class="im"><div><img src="/img/ptype-cash.gif"></div></div>
-              </div>
-            </center>
-          </div>
-          <div class="clear"></div>
-        </div>
-
-        <div id="order" class="step">
-          <h2>Пожалуйста, ещё раз внимательно проверьте все параметры заказа:</h2>
-          <?/*<img class="loader" src="/img/loader.svg">*/?>
-          <div class="info">
-            <div id="order-list" class="row">
-              <div class="cell th">Список покупок:</div>
-              <div class="cell td">
-                <?
-                $i=1;
-                foreach ($_SESSION['cart']['mods'] as $mod){
-									?><div><b><?=$i++?></b>. <?=$mod['good_name']?> (<?=$mod['mods_type']?>: <?=$mod['mod_name']?>) &mdash; <span class="price"><?=$mod['quant']?></span> <span class="rub">шт.</span> <span class="price"><?=$mod['amount']?></span> <span class="rub">руб</span></div><?
-                }
-                ?>
-              </div>
-            </div>
-            <div id="order-contacts" class="row">
-              <div class="cell th">Контактная информация:</div>
-              <div class="cell td"><b>ФИО</b>: <br><b>E-mail</b>: <br><b>Телефон</b>: <br><b>Адрес доставки</b>: <br><b>Почтовый индекс</b>: </div>
-            </div>
-            <div id="order-delivery" class="row">
-              <div class="cell th">Способ доставки:</div>
-              <div class="cell td">Доставка «Почта России» &mdash; <span class="price">350</span> <span class="rub">руб</span></div>
-            </div>
-            <div id="order-payment" class="row">
-              <div class="cell th">Способ оплаты:</div>
-              <div class="cell td">100% предоплата</div>
-            </div>
-            <div id="order-tatal" class="row">
-              <div class="cell th">Итоговая стоимость заказа:</div>
-              <div class="cell td itogo"><?=number_format($_SESSION['cart']['total']+350,0,',',' ')?> <span class="rub">руб</span></div>
-            </div>
+      <div style="text-align:center; padding-top:20px;">
+        <div class="btn btn-default medium oform" onclick="$(this).addClass('disabled');$('#frm-order').submit();">Подтверждаю заказ</div>
+        <div class="callme">
+          <input type="hidden" name="callme" value="1">
+          <span>после оформления заказа наш менеджер свяжется с Вам для уточнения информации</span>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle btn-mini" data-toggle="dropdown"><b>да</b><span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">да, так надёжнее</a></li>
+              <li><a href="#">нет, не нужно</a></li>
+            </ul>
           </div>
         </div>
+        <div class="confirm">Нажимая кнопку «Подтверждаю заказ», я соглашаюсь на получение информации от интернет-магазина и уведомлений о состоянии моих заказов, а также принимаю условия <a href="">политики конфиденциальности</a> и <a href="">пользовательского соглашения</a>.</div>
+      </div>
 
-        <div style="text-align:center; padding-top:20px;">
-          <div><a href="" rel="nofollow" class="btn tocart btn-big">Подтверждаю заказ</a></div>
-          <div class="callme">
-            <input type="hidden" name="callme" value="1">
-            <span>после оформления заказа наш менеджер свяжется с Вам для уточнения информации</span>
-            <div class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle btn-mini" data-toggle="dropdown"><b>да</b><span class="caret"></span></button>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">да, так надёжнее</a></li>
-                <li><a href="#">нет, не нужно</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="confirm">Нажимая кнопку «Подтверждаю заказ», я соглашаюсь на получение информации от интернет-магазина и уведомлений о состоянии моих заказов, а также принимаю условия <a href="">политики конфиденциальности</a> и <a href="">пользовательского соглашения</a>.</div>
-        </div>
-
-      </form>
-
-		</div>
+    </form>
 		<?
 
 		break;
 	// ----------------- КОРЗИНА ПУСТА
 	case 'empty':
-		?>пусто<?
+
+    $navigate = 'Корзина';
+
+    $title = $page['name'];
+    foreach(array('title','keywords','description') as $val)
+      if($page[$val]) $$val = $page[$val];
+
+    ob_start();
+    echo catalog();
+    $Lcol = ob_get_clean();
+
+    ?>
+    <h1>Корзина</h1>
+    <div class="content">В данный момент Ваша корзина пуста</div>
+    <a href="" class="back" rel="nofollow">&laquo; назад</a>
+    <?
+
 		break;
-	// ----------------- РЕЗУЛЬТАТ ЗАКАЗА
+	// ----------------- РЕЗУЛЬТАТ ЗАКАЗА ---------------------------
 	case 'res':
+
+	  if(!$_SESSION['orders'] || !$id_order = (int)$_GET['order']){ header("HTTP/1.0 404 Not Found"); $code = '404'; require('errors.php'); exit; }
+		if(!in_array($id_order,(array)$_SESSION['orders'])){ header("HTTP/1.0 404 Not Found"); $code = '404'; require('errors.php'); exit; }
+		if(!$order = getRow("SELECT * FROM {$prx}orders WHERE id='{$id_order}'")){ header("HTTP/1.0 404 Not Found"); $code = '404'; require('errors.php'); exit; }
+
+		$title = $navigate = 'Информация о заказе';
+
+		?>
+    <link rel="stylesheet" type="text/css" href="/css/cart-print.css" media="print" />
+    <style>
+    .subtab { width:100%; margin-bottom:40px;}
+    .subtab th, .subtab td { border:1px solid #D0E0F3; }
+		.subtab thead th { background-color:#e7f3ff; padding:3px 10px; color:#006cb0; white-space:nowrap; text-align:center; width:20%; }
+		.subtab thead th:nth-child(1) { width:1%;}
+		.subtab thead th:nth-child(2) { width:50%;}
+		.subtab tbody th { text-align:center;}
+		.subtab tbody td { padding:10px 10px; }
+		.subtab tbody td:nth-child(3), .subtab tbody td:nth-child(5) { text-align:right; padding-left:40px; white-space:nowrap; font: normal 24px/30px 'Source Sans Pro', sans-serif; color: #01a6ff;}
+		.subtab tfoot td { padding:10px 10px; text-align:right; padding-left:40px; white-space:nowrap; font: normal 24px/30px 'Source Sans Pro', sans-serif; color: #01a6ff;}
+		.subtab tfoot b { font-weight:400; color: #01a6ff;}
+		.client-info b { font-weight:400; }
+		</style>
+
+		<h1 style="float:left">Заказ №<?=$id_order?> от <?=date('d.m.Y')?></h1>
+    <div style="float:left; margin:5px 0 0 20px;"><a title="распечатать" href="javascript:print();"><img src="/img/print.png" width="24" height="24"></a></div>
+    <div class="clear"></div>
+
+    <h2>Покупатель:</h2>
+    <div class="client-info" style="margin-bottom:20px;"><?=$order['user_info']?></div>
+
+    <h2>Информация о заказе:</h2>
+    <?=$order['order_info']?>
+		<?
 		break;
 }
 

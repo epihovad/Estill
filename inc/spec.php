@@ -51,50 +51,46 @@ function islider()
 	<?
 }
 
+// СТРОКА НАВИГАЦИИ
 function navigate()
 {
-	global $prx, $rubric, $good, $page, $ids_parent_rubric;
+	global $navigate;
+	if(!$navigate) return;
+	$sep = '<span>&rarr;</span>';
+	?><div id="navigate"><div class="in"><a href="/">Главная</a><?=$sep?><?=$navigate?></div></div><?
+}
+//
+function get_navigate()
+{
+	global $prx, $rubric, $good, $ids_parent_rubric;
+
+	if(!$rubric && !$good)
+	  return;
 
 	$sep = '<span>&rarr;</span>';
 	$nav = '';
 
-	// обычная страница
-	if($page){
+  $ids_parent_rubric = (array)$ids_parent_rubric;
+  if(!$ids_parent_rubric) return;
 
-	  $nav .= $page['name'];
+  $tbl = 'catalog';
+  $link = "/{$tbl}/";
+  $nav .= '<a href="/catalog/">Каталог</a>';
 
-  }
-  // каталог или страница товара
-  elseif ($rubric || $good){
-
-	  $ids_parent_rubric = (array)$ids_parent_rubric;
-		if(!$ids_parent_rubric) return;
-
-		$tbl = 'catalog';
-		$link = "/{$tbl}/";
-		$nav .= '<a href="/catalog/">Каталог</a>';
-
-		foreach($ids_parent_rubric as $id_rubric)
-		{
-			$rb = $id_rubric==$rubric['id'] ? $rubric : gtv($tbl,'name,link',$id_rubric);
-			$link .= ($id_rubric==$rubric['id'] ? $rb['link'] : gtv($tbl,'link',$id_rubric)).'/';
-			if(!$good && $id_rubric==$rubric['id']){
-				$nav .= $sep.$rb['name'];
-			} else {
-				$nav .= $sep.'<a href="'.$link.'">'.$rb['name'].'</a>';
-			}
-		}
-
-		if($good) $nav .= ($nav?$sep:'').$good['name'];
+  foreach($ids_parent_rubric as $id_rubric)
+  {
+    $rb = $id_rubric==$rubric['id'] ? $rubric : gtv($tbl,'name,link',$id_rubric);
+    $link .= ($id_rubric==$rubric['id'] ? $rb['link'] : gtv($tbl,'link',$id_rubric)).'/';
+    if(!$good && $id_rubric==$rubric['id']){
+      $nav .= $sep.$rb['name'];
+    } else {
+      $nav .= $sep.'<a href="'.$link.'">'.$rb['name'].'</a>';
+    }
   }
 
-	?>
-  <div id="navigate">
-    <div class="in">
-      <a href="/">Главная</a><?=$sep?><?=$nav?>
-    </div>
-  </div>
-	<?
+  if($good) $nav .= ($nav?$sep:'').$good['name'];
+
+  return $nav;
 }
 
 function catalog()
@@ -250,12 +246,17 @@ function num2str($count,$txt='товар')
 // ВЫВОД ALERT ОБ ОШИБКЕ (и прерывание выполнения)
 function jAlert($text,$method='',$type='',$func='',$prm='',$exit=true)
 {
+  global $jAlert_js;
+
 	$method = $method ? $method : 'show';
 	$type = $type ? $type : 'alert';
 	$prm = $prm ? $prm : '{}';
-	?><script>
+	?>
+  <script>
 		top.jQuery(document).jAlert('<?=$method?>','<?=$type?>','<?=$text?>',function(){<?=$func?>},<?=$prm?>);
 		top.jQuery('#ajax').attr('src','/inc/none.htm');
-	</script><?
+	  <?=$jAlert_js?>
+  </script>
+  <?
   if($exit) exit;
 }

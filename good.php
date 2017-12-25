@@ -1,4 +1,5 @@
 <?
+$navigate = get_navigate();
 
 // -------------------- TITLE + КЛЮЧЕВЫЕ СЛОВА
 $title = $good['name'];
@@ -20,9 +21,9 @@ $images = array();
 $imgs = getImages('goods',$good['id']);
 foreach ($imgs as $im){
 	$images[] = array(
-		'base' => "/uploads/goods/265x265/{$im}",
-		'href' => "/uploads/goods/{$im}",
-		'src' => "/uploads/goods/45x45/{$im}"
+		'base' => "/goods/265x265/{$im}",
+		'href' => "/goods/{$im}",
+		'src' => "/goods/45x45/{$im}"
 	);
 }
 
@@ -64,14 +65,14 @@ while ($arr = @mysql_fetch_assoc($r)){
 
 <div class="good-prm">
   <div class="lb">Цена</div>
-  <div class="price"><span><?=number_format($mods[0]['price'],0,',',' ')?></span> руб.</div>
+  <div class="price"><span><?=price($mods[0]['price'])?></span> руб.</div>
   <div class="note">Стоимость изделия зависит от выбранных параметров</div>
   <div class="sep"></div>
   <div class="lb">Размер</div>
   <select name="size" class="form-control">
     <?
     foreach ($mods as $mod){
-      ?><option mod="<?=$mod['id']?>" price="<?=number_format($mod['price'],0,',',' ')?>" price_shelf="<?=number_format($mod['price_shelf'],0,',',' ')?>" sections="<?=$mod['sections']?>"><?=$mod['name']?></option><?
+      ?><option mod="<?=$mod['id']?>" price="<?=price($mod['price'])?>" price_shelf="<?=price($mod['price_shelf'])?>" sections="<?=$mod['sections']?>"><?=$mod['name']?></option><?
     }
     ?>
   </select>
@@ -119,7 +120,7 @@ if(@mysql_num_rows($r)){
               <img src="/goods/200x200/<?=$g['id']?>.jpg">
             </a>
             <div class="clear"></div>
-            <div class="price"><?=number_format($mod['price'],0,',',' ')?> руб.</div>
+            <div class="price"><?=price($mod['price'])?> руб.</div>
             <div class="btn btn-default tocart-mini" mod="<?=$mod['id']?>">в корзину<span></span></div>
           </div>
         </div>

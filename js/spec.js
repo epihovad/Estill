@@ -131,9 +131,9 @@ function jPop(url) {
   });
 }
 
-function toCart(mod,quant)
+function toCart(mod,quant,dopURL)
 {
-  inajax('/cart.php','action=tocart&mod='+mod+'&quant='+(quant*1<1?1:quant));
+  inajax('/cart.php','action=add&mod='+mod+'&quant='+(quant*1<1?1:quant)+dopURL);
 }
 
 function update_captcha()

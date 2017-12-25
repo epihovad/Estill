@@ -57,7 +57,7 @@ elseif(isset($_GET['red']))
   <table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
   	<tr>
     	<th class="tab_red_th"></th>
-      <th>Дата включения подписки</th>
+      <th>Дата создания подписки</th>
       <td style="font-size:11px"><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
     </tr>
 		<tr>
@@ -168,7 +168,7 @@ else
       <th><input type="checkbox" name="check_del" id="check_del" /></th>
       <th>№</th>
 			<th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'E-mail','mail')?></th>
-      <th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Дата','date')?></th>
+      <th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Дата создания подписки','date')?></th>
       <th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Дата завершения подписки','unsubscribe_date')?></th>
 			<th width="40%">Примечание</th>
       <th nowrap>В черном списке</th>

@@ -41,6 +41,8 @@ if($good){
   exit;
 }
 
+$navigate = get_navigate();
+
 // -------------------- TITLE + КЛЮЧЕВЫЕ СЛОВА
 $title = $rubric['name'];
 foreach(array('title','keywords','description') as $val)
@@ -49,7 +51,7 @@ foreach(array('title','keywords','description') as $val)
 ob_start();
 
 if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/catalog/250x250/{$rubric['id']}.jpg")){
-  ?><div id="cat-im"><img src="/catalog/250x250/<?=$rubric['id']?>.jpg"></div><?
+  ?><div id="cat-im"><img src="/catalog/250x250/<?=$rubric['id']?>.jpg" style="max-width:160px"></div><?
 }
 ?>
 <div id="cat-header"><h1><?=wordwrap($rubric['name'], 40, '<br>')?></h1></div>
@@ -88,7 +90,7 @@ if(@mysql_num_rows($res)){
           <img src="/goods/200x200/<?=$g['id']?>.jpg">
         </a>
         <div class="clear"></div>
-        <div class="price"><?=number_format($mod['price'],0,',',' ')?> руб.</div>
+        <div class="price"><?=price($mod['price'])?> руб.</div>
         <div class="btn btn-default tocart-mini" mod="<?=$mod['id']?>">в корзину<span></span></div>
       </div>
     </div>

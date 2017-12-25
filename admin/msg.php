@@ -50,30 +50,32 @@ elseif(isset($_GET['red']))
   	<tr>
     	<th class="tab_red_th"></th>
       <th>Дата</th>
-      <td style="font-size:11px"><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
+      <td style="font-size:12px"><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
     </tr>
 		<tr>
 			<th class="tab_red_th"></th>
 			<th>Тип</th>
-			<td><?=$row['type']?></td>
+			<td style="font-size:12px"><?=$row['type']?></td>
 		</tr>
     <tr>
+      <th class="tab_red_th"></th>
+      <th>Имя</th>
+      <td style="font-size:12px"><?=$row['name']?></td>
+    </tr>
+    <tr>
+      <th class="tab_red_th"></th>
+      <th>E-mail</th>
+      <td style="font-size:12px"><?=$row['email']?></td>
+    </tr>
+    <tr>
+      <th class="tab_red_th"></th>
+      <th>Телефон</th>
+      <td style="font-size:12px"><?=$row['phone']?'+7'.$row['phone']:''?></td>
+    </tr>
+    <tr>
     	<th class="tab_red_th"></th>
-      <th>Информация</th>
-			<td><?
-				if($row['type'] == 'Консультация' || $row['type'] == 'Заказ в 1 клик'){
-					?>
-					<b>Имя</b>: <?=$row['name']?><br>
-					<b>Телефон</b>: +7<?=$row['phone']?>
-					<?
-				} else {
-					?>
-					<b>Имя</b>: <?=$row['name']?><br>
-					<b>Email</b>: <?=$row['mail']?><br>
-					<b>Сообщение</b>:<div style="padding-left:20px;"><?=nl2br($row['text'])?></div>
-					<?
-				}
-			?></td>
+      <th>Сообщение</th>
+			<td style="font-size:12px"><?=nl2br($row['text'])?></td>
     </tr>
     <tr>
     	<th class="tab_red_th"></th>
@@ -103,7 +105,7 @@ else
 	$where = '';
 	if($f_msg) $where .= " AND type = '{$f_msg}'";
 	if($f_context) $where .= " AND (name LIKE '%{$f_context}%' OR
-																	mail LIKE '%{$f_context}%' OR
+																	email LIKE '%{$f_context}%' OR
 																	phone LIKE '%{$f_context}%' OR
 																	text LIKE '%{$f_context}%' OR
 																	notes LIKE '%{$f_context}%')";
@@ -156,12 +158,15 @@ else
   <input type="hidden" id="cur_id" value="<?=@$_GET['id']?@(int)$_GET['id']:""?>" />
   <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
     <tr>
-      <th><input type="checkbox" name="check_del" id="check_del" /></th>
-      <th>№</th>
+      <th width="1%"><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th width="1%">№</th>
 			<th nowrap>Тип</th>
       <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Дата','date')?></th>
-      <th width="60%">Сообщение</th>
-			<th width="40%">Примечание</th>
+      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Имя','name')?></th>
+      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'E-mail','email')?></th>
+      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Телефон','phone')?></th>
+      <th width="30%">Сообщение</th>
+			<th width="30%">Примечание</th>
       <th style="padding:0 30px;"></th>
     </tr>
     <?
@@ -175,22 +180,12 @@ else
 			<tr id="row<?=$row['id']?>">
 				<th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
         <th><?=$i++?></th>
-				<td nowrap><?=$row['type']?></td>
+				<td nowrap align="center"><?=$row['type']?></td>
         <td nowrap style="font-size:11px; text-align:center;"><?=date('d.m.Y',strtotime($row['date']))?><br><?=date('H:i',strtotime($row['date']))?></td>
-        <td class="sp"><?
-					if($row['type'] == 'Консультация' || $row['type'] == 'Заказ в 1 клик'){
-						?>
-						<b>Имя</b>: <?=$row['name']?><br>
-						<b>Телефон</b>: +7<?=$row['phone']?>
-						<?
-					} else {
-						?>
-						<b>Имя</b>: <?=$row['name']?><br>
-						<b>Email</b>: <?=$row['mail']?><br>
-						<b>Сообщение</b>:<div style="padding:0 0 0 20px;"><?=nl2br($row['text'])?></div>
-						<?
-					}
-				?></td>
+        <td nowrap align="center" class="sp"><?=$row['name']?></td>
+        <td nowrap align="center" class="sp"><?=$row['email']?></td>
+        <td nowrap align="center" class="sp"><?=$row['phone']?'+7'.$row['phone']:''?></td>
+        <td class="sp"><?=nl2br($row['text'])?></td>
 				<td class="sp"><?=nl2br($row['notes'])?></td>
 				<td nowrap align="center"><?=btn_edit($row['id'])?></td>
 			</tr>

@@ -64,9 +64,10 @@ jQuery(document).ready(function( $ ) {
   //
   $('.tocart').click(function(){
     var mod = $size.find('option:selected').attr('mod');
+    var shelf = $shelf.find('option:selected').val()=='нет' ? '0' : '1';
     var quant = $('.good-prm input[name="quant"]').val();
     $('.tocart').addClass('disabled');
-    toCart(mod,quant);
+    toCart(mod,quant,'&shelf='+shelf);
     return false;
   });
   //

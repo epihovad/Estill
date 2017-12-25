@@ -297,7 +297,7 @@ function show_tr_img($input_name,$path,$fname='',$href,$name='Изображен
 	return ob_get_clean();
 }
 
-function show_tr_images($mask,$title='Изображения',$help='',$count=3,$name='gimg',$dir='',$dopfield=false)
+function show_tr_images($mask,$title='Изображения',$help='',$count=3,$name='gimg',$dir='',$size_mini='45x45',$dopfield=false)
 {
 	global $prx, $tbl, $row;
 	$dir = $dir ? $dir : $tbl;
@@ -345,7 +345,7 @@ function show_tr_images($mask,$title='Изображения',$help='',$count=3,
 							?>
 							<div class="im">
 								<div class="i0"><?=$i++?>.</div>
-								<div class="i1"><a href="/uploads/<?=$dir?>/<?=$fname?>" class="highslide" onclick="return hs.expand(this)"><img src="/uploads/<?=$dir?>/45x45/<?=$fname?>" width="16"></a></div>
+								<div class="i1"><a href="/uploads/<?=$dir?>/<?=$fname?>" class="highslide" onclick="return hs.expand(this)"><img src="/uploads/<?=$dir?>/<?=$size_mini?>/<?=$fname?>" width="16"></a></div>
 								<div class="i2"><a href="?action=img_del&id=<?=$mask?>&dir=<?=$dir?>&fname=<?=$fname?>" target="ajax" title="удалить текущее изображение"><img src="img/del.png"></a></div>
                 <? if($dopfield){ ?>
                 <div class="i3"><input type="text" name="fval[<?=$fname?>]" value="<?=getField("SELECT `val` FROM {$prx}materials_img WHERE `fname`='{$fname}'")?>" /></div>

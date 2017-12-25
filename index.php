@@ -89,29 +89,25 @@ ob_start();
       <div class="h">Наши благодарные клиенты</div>
       <div class="sep"></div>
       <div class="row">
-        <? for($i=0; $i<4; $i++){?>
-        <div class="col-md-3 item">
-          <div class="author">
-            <img src="/img/client.jpg">
-            <div class="name">Ольга</div>
-            <div class="prof">Домохозяйка</div>
-          </div>
-          <div class="clear"></div>
-          <div class="sep"></div>
-          <div class="txt">
-            На прошлой неделе приобрели
-            в компании «...» новый полотенцесушитель.
-            Выбрали угловой с боковым подключением.
-            Места у нас в ванной комнате не очень
-            много, поэтому приходится экономить
-            каждый сантиметр.
-            Работает превосходно.
-            Полотенца и мелкие вещи сушит очень
-            быстро. Покупкой очень довольна.
-            Рекомендую всем.
-          </div>
-        </div>
-				<?}?>
+        <?
+				$r = sql("SELECT * FROM {$prx}reviews_index WHERE status=1 ORDER BY RAND() LIMIT 4");
+				if(@mysql_num_rows($r)) {
+					while ($arr = mysql_fetch_assoc($r)) {
+            ?>
+            <div class="col-md-3 item">
+              <div class="author">
+                <img src="/reviews/47x47/<?=$arr['id']?>.jpg">
+                <div class="name"><?=$arr['name']?></div>
+                <div class="prof"><?=$arr['prof']?></div>
+              </div>
+              <div class="clear"></div>
+              <div class="sep"></div>
+              <div class="txt"><?=$arr['text']?></div>
+            </div>
+            <?
+					}
+				}
+        ?>
       </div>
     </div>
   </div>

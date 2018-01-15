@@ -27,7 +27,8 @@
   <link rel="stylesheet" href="/js/jquery/arcticmodal/jquery.arcticmodal-0.3.css">
   <link rel="stylesheet" href="/js/jquery/arcticmodal/themes/simple.css">
 	<?=$const['js_links']?>
-  <meta name="viewport" content="user-scalable=no,width=device-width" />
+  <meta name="viewport" content="width=1263" />
+  <meta name="format-detection" content="telephone=no">
 
   <!--[if lt IE 9]>
   <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>

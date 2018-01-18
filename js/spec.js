@@ -90,7 +90,7 @@ jQuery(document).ready(function( $ ) {
     return false;
   });
   //
-  $('.fnews .btn').click(function(){ $(this).addClass('disabled'); inajax('/inc/actions.php?action=subscribe','mail='+$('.fnews input').val()); return false; });
+  $('.fnews .btn').click(function(){ $(this).addClass('disabled'); inajax('/inc/actions.php?action=subscribe','email='+$('.fnews input').val()); return false; });
   //
   //
   $('.tocart-mini').click(function(){

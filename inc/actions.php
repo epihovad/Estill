@@ -52,7 +52,7 @@ if(isset($_GET['action']))
 			}
 
 			// мылим админу
-			mailTo(set('admin_mail'), $mailto['theme'], $mailto['text'], set('admin_mail'));
+			mailTo(array(set('admin_mail'),'info@estill.ru',$email), $mailto['theme'], $mailto['text']);
 
 			?><script>top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery.arcticmodal('close')});</script><?
 			break;
@@ -63,6 +63,8 @@ if(isset($_GET['action']))
 				$$k = clean($v);
 
 			if($hdn) exit; // спам-боты
+
+			$jAlert_js = "top.jQuery('.fnews .btn').removeClass('disabled');";
 
 			if(!check_mail($email)) jAlert('Введен некорректный E-mail');
 
@@ -88,7 +90,7 @@ if(isset($_GET['action']))
 			}
 
 			// мылим админу
-			mailTo(set('admin_mail'), 'Подписка', 'У нас новый подписчик:<br>'.$email, set('admin_mail'));
+			mailTo(array(set('admin_mail'),'info@estill.ru',$email), 'Новый подписчик', 'У нас новый подписчик:<br>'.$email);
 
 			?>
       <script>

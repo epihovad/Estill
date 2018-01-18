@@ -339,7 +339,14 @@ function ToDouble($val)
 			$val = number_format($val,0,'.','');
 	return $val;
 }
-// ОТПРАВКА HTML ПИСЬМА
+// ОТПРАВКА ПИСЬМА ЧЕРЕЗ SMTP PHPMailer
+function mailTo($to, $subject, $body)
+{
+	require_once ($_SERVER['DOCUMENT_ROOT'] . '/inc/Mailer.php');
+	$Mailer = new Mailer();
+	return $Mailer->mailTo($to, $subject, $body);
+}
+/*// ОТПРАВКА HTML ПИСЬМА
 function mailTo($to, $subject, $message, $from='', $charset='utf-8')
 {
 	$subject = "=?{$charset}?B?".base64_encode($subject)."?=";
@@ -347,7 +354,7 @@ function mailTo($to, $subject, $message, $from='', $charset='utf-8')
 	if($from)
 		$headers .= "From: {$from}\r\nReply-To: {$from}\r\n";
 	return @mail($to, $subject, $message, $headers);
-}
+}*/
 // ОТПРАВКА HTML ПИСЬМА С ВЛОЖЕНИЯМИ
 function mailToFiles($to, $subject, $message, $from='', $files=array(), $charset='utf-8')
 {

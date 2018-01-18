@@ -232,9 +232,7 @@ if(isset($_GET['action']))
         <?
       $text = ob_get_clean();
 
-      require_once ($_SERVER['DOCUMENT_ROOT'] . '/inc/Mailer.php');
-      $Mailer = new Mailer();
-      $Mailer->mailTo($subject,$text,array(set('admin_mail'),'info@estill.ru',$email));
+      mailTo(array(set('admin_mail'),'info@estill.ru',$email), $subject, $text);
 
       unset($_SESSION['cart']);
 

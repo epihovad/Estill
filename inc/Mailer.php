@@ -18,7 +18,7 @@ class Mailer extends PHPMailer {
 	}
 
 	// $emails - массив адресатов array('test1@mail.ru'=>'Тест Петрович','test2@mail.ru'=>'Тест Иванович')
-	public function mailTo($subject,$body,$to){
+	public function mailTo($to,$subject,$body){
 		$this->Subject = $subject;
 		$this->Body = $body;
 		foreach ($to as $email){

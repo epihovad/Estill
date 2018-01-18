@@ -17,8 +17,8 @@
 .good-prm .sep { clear:both; font-size:0; padding:10px 0 0; margin:0 0 10px 0; border-bottom:1px solid #ebebeb; background:none;}
 .good-prm select { width:auto; float:right; color:#313132; font-size:16px; padding:4px 12px 6px 12px;}
 .good-prm .input-group { width:60px; margin-top:-3px; float:right;}
-.good-prm .tocart { margin-top:15px; padding-right:46px;}
-.good-prm .tocart span { position:absolute; margin:0 0 0 8px; font-size:0; width:22px; height:22px; float:right; background:url(/img/tocart.png) no-repeat;}
+.good-prm .tocart { margin-top:15px;}
+.good-prm .tocart span { background-image:url(/img/tocart.png); background-repeat:no-repeat;}
 
 .good-info { padding-top:30px;}
 .good-info .h { font:normal 20px/1 'Source Sans Pro', sans-serif; color:#004687; padding-bottom:20px;}

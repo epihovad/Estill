@@ -63,7 +63,7 @@ elseif(isset($_GET['red']))
 		<tr>
 			<th class="tab_red_th"></th>
 			<th>E-mail</th>
-			<td style="font-size:14px"><?=$row['mail']?></td>
+			<td style="font-size:14px"><?=$row['email']?></td>
 		</tr>
     <? if(!$row['unsubscribe_date']){?>
       <tr>
@@ -113,7 +113,7 @@ else
 	$f_context = stripslashes($_SESSION['ss']['context']);
 	
 	$where = '';
-	if($f_context) $where .= " AND (mail LIKE '%{$f_context}%' OR
+	if($f_context) $where .= " AND (email LIKE '%{$f_context}%' OR
 	                                note LIKE '%{$f_context}%'
 	                                )";
 
@@ -167,7 +167,7 @@ else
     <tr>
       <th><input type="checkbox" name="check_del" id="check_del" /></th>
       <th>№</th>
-			<th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'E-mail','mail')?></th>
+			<th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'E-mail','email')?></th>
       <th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Дата создания подписки','date')?></th>
       <th width="20%" nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Дата завершения подписки','unsubscribe_date')?></th>
 			<th width="40%">Примечание</th>
@@ -185,7 +185,7 @@ else
 			<tr id="row<?=$row['id']?>"<?=$row['unsubscribe_date']||$row['black']?' class="unactive"':''?>>
 				<th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
         <th><?=$i++?></th>
-				<td nowrap class="sp"><?=$row['mail']?></td>
+				<td nowrap class="sp"><?=$row['email']?></td>
         <td nowrap style="font-size:11px; text-align:center;"><?=date('d.m.Y',strtotime($row['date']))?> <?=date('H:i',strtotime($row['date']))?></td>
         <td nowrap style="font-size:11px; text-align:center;"><?=$row['unsubscribe_date'] ? date('d.m.Y',strtotime($row['unsubscribe_date'])).' '.date('H:i',strtotime($row['unsubscribe_date'])) : ''?></td>
 				<td class="sp"><?=$row['note']?></td>

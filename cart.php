@@ -215,16 +215,19 @@ if(isset($_GET['action']))
 			  jAlert('Во время сохранения данных произошла ошибка.<br>Администрация сайта приносит Вам свои извинения.<br>Мы уже знаем об этой проблеме и работаем над её устранением.');
 			}
 
+			$number = date('Ymd').'/'.$id_order;
+			update('orders',"`number`='{$number}'",$id_order);
+
 			$_SESSION['orders'][] = $id_order;
 
 			// журнал
       update("log","text='новый заказ',link='orders.php?red={$id_order}'");
 
 			// мылим
-      $subject = 'Заказ №'.$id_order.' от '.date('d.m.Y').' с сайта '.$_SERVER['SERVER_NAME'];
+      $subject = 'Заказ №'.$number.' от '.date('d.m.Y').' с сайта '.$_SERVER['SERVER_NAME'];
       ob_start();
         ?>
-        <h2>Заказ №<?=$id_order?> от <?=date('d.m.Y')?></h2>
+        <h2>Заказ №<?=$number?> от <?=date('d.m.Y')?></h2>
         <h3 style="margin-bottom:5px;">Покупатель:</h3>
         <div style="margin-bottom:10px;"><?=$user_info?></div>
         <h3 style="margin-top:5px;">Информация о заказе:</h3>
@@ -237,7 +240,7 @@ if(isset($_GET['action']))
       unset($_SESSION['cart']);
 
       $message  = 'Уважаемый(ая) '.$name.'!';
-      $message .= '<br>Номер Вашего заказа: <b>'.$id_order.'</b> от <b>'.date('d.m.Y').'</b>';
+      $message .= '<br>Номер Вашего заказа: <b>'.$number.'</b> от <b>'.date('d.m.Y').'</b>';
       $message .= '<br>Заказ отправлен в отдел продаж.';
       $message .= '<br>Благодарим Вас за обращение в нашу Компанию.';
 
@@ -382,7 +385,9 @@ switch(@$_GET['show'])
             </ul>
           </div>
         </div>
-        <div class="confirm">Нажимая кнопку «Подтверждаю заказ», я соглашаюсь на получение информации от интернет-магазина и уведомлений о состоянии моих заказов, а также принимаю условия <a href="">политики конфиденциальности</a> и <a href="">пользовательского соглашения</a>.</div>
+        <div class="confirm">Нажимая на кнопку «Подтверждаю заказ» я даю своё согласие на обработку моих <a href="/personal_data.htm" target="_blank">персональных данных</a>,
+          в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для целей, определенных
+          <a href="/privacy_policy.htm" target="_blank">Политикой конфиденциальности</a>.</div>
       </div>
 
     </form>
@@ -434,7 +439,7 @@ switch(@$_GET['show'])
 		.client-info b { font-weight:400; }
 		</style>
 
-		<h1 style="float:left">Заказ №<?=$id_order?> от <?=date('d.m.Y')?></h1>
+		<h1 style="float:left">Заказ №<?=$order['number']?> от <?=date('d.m.Y')?></h1>
     <div style="float:left; margin:5px 0 0 20px;"><a title="распечатать" href="javascript:print();"><img src="/img/print.png" width="24" height="24"></a></div>
     <div class="clear"></div>
 

@@ -89,7 +89,7 @@ while ($arr = @mysql_fetch_assoc($r)){
   <div class="lb">Количество</div>
 	<?=chQuant()?>
   <div class="sep"></div>
-  <div class="btn btn-default medium tocart">в корзину<span></span></div>
+  <div class="btn btn-default medium icon tocart">в корзину<span></span></div>
 </div>
 
 <div class="clear"></div>
@@ -121,7 +121,7 @@ if(@mysql_num_rows($r)){
             </a>
             <div class="clear"></div>
             <div class="price"><?=price($mod['price'])?> руб.</div>
-            <div class="btn btn-default tocart-mini" mod="<?=$mod['id']?>">в корзину<span></span></div>
+            <div class="btn btn-default icon tocart-mini" mod="<?=$mod['id']?>">в корзину<span></span></div>
           </div>
         </div>
         <?

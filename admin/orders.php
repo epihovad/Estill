@@ -42,7 +42,6 @@ if(isset($_GET['action']))
 				errorAlert('Во время сохранения данных произошла ошибка.');
 
 			// проверка и запрет установки предыдущего статуса
-			$arr_status = array('новый','формируется','готов','расформирован','закрыт');
 			$old_status = array_search($order['status'],$arr_status);
 			$new_status = array_search($status,$arr_status);
 
@@ -51,8 +50,7 @@ if(isset($_GET['action']))
 
 			?>
 			<script>
-				var $tr = top.$('tr#row<?=$id?>');
-				$tr.attr('audio',0);
+				var $tr = top.$('tr#row<?=$id?>');;
 				$tr.removeClass('status<?=$old_status?>').addClass('status<?=$new_status?>');
 			</script>
 			<?
@@ -101,10 +99,15 @@ elseif(isset($_GET['red']))
       <td><?=$order['order_info']?></td>
 		</tr>
 		<tr>
-			<th class="tab_red_th"></th>
+			<th class="tab_red_th"><?=help('Уведомлять клиента об изменении статуса заказа')?></th>
 			<th>E-mail информирование</th>
 			<td><?=$order['sendmail'] ? '<span style="color:green">ВКЛЮЧЕНО</span>' : '<span style="color:red">ВЫКЛЮЧЕНО</span>'?></td>
 		</tr>
+    <tr>
+      <th class="tab_red_th"><?=help('Перезвонить клиенту для уточнения заказа')?></th>
+      <th>Перезвонить клиенту</th>
+      <td><?=$order['sendmail'] ? '<span style="color:green">ДА</span>' : '<span style="color:red">НЕТ</span>'?></td>
+    </tr>
 		<tr>
     	<th class="tab_red_th"></th>
       <th>Статус</th>
@@ -225,12 +228,23 @@ else
 
 	<div style="clear:both"></div>
 
+  <script>
+    $(function(){
+      $('select.change_status').change(function() {
+        var selected = $(this).val();
+        var id = $(this).attr('order');
+        toajax('?action=status&id='+id+'&status='+selected)
+      });
+    });
+  </script>
+
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
   <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
     <tr>
     	<th><input type="checkbox" name="check_del" id="check_del" /></th>
       <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'№','number')?></th>
       <th width="100%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Заказ','order_info')?></th>
+      <th nowrap>Перезвонить <?=help('Перезвонить клиенту для уточнения заказа')?></th>
       <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
       <th style="padding:0 30px;"></th>
     </tr>
@@ -244,10 +258,11 @@ else
 		{
 			$id = $order['id'];
 			?>
-			<tr class="status<?=array_search($order['status'],$arr_status)?>" audio="0">
+			<tr id="row<?=$id?>" class="status<?=array_search($order['status'],$arr_status)?>" audio="0">
         <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /></th>
         <th class="sp" nowrap><?=$order['number']?><br><span style="font-weight:normal; font-size:11px;">от <?=date('d.m.Y', strtotime($order['date']))?><br><?=date('H:i:s', strtotime($order['date']))?></span></th>
         <td class="sp" valign="top"><?=$order['order_info']?></td>
+        <td nowrap align="center"><?=$order['sendmail'] ? '<span style="color:green">ДА</span>' : '<span style="color:red">НЕТ</span>'?></td>
         <td nowrap align="center"><?=dllEnum($tbl,'status',"order=\"{$id}\" class=\"change_status\"",$order['status'])?></td>
         <td nowrap align="center"><?=btn_edit($id)?></td>
 			</tr>

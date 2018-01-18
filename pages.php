@@ -21,7 +21,15 @@ ob_start();
 $h1 = $page['h1'] ? $page['h1'] : $page['name'];
 ?>
 <h1><?=$h1?></h1>
-<div class="content"><?=$page['text']?></div>
+<div class="content">
+  <?=$page['text']?>
+  <? if($page['link'] == 'optovikam'){ ?>
+    <div style="text-align:center">
+      <h3 style="padding-top:20px">Мы открыты для рассмотрения любых предложений и готовы к сотрудничеству.<br>Отправьте свою заявку прямо сейчас!</h3>
+      <div class="btn btn-default medium fb-frm" tp="opt">отправить запрос</div>
+    </div>
+  <?}?>
+</div>
 <a href="" class="back" rel="nofollow">&laquo; назад</a>
 <?
 $content = ob_get_clean();

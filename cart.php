@@ -221,7 +221,7 @@ if(isset($_GET['action']))
       update("log","text='новый заказ',link='orders.php?red={$id_order}'");
 
 			// мылим
-      $subj = 'Заказ №'.$id_order.' от '.date('d.m.Y').' с сайта '.$_SERVER['SERVER_NAME'];
+      $subject = 'Заказ №'.$id_order.' от '.date('d.m.Y').' с сайта '.$_SERVER['SERVER_NAME'];
       ob_start();
         ?>
         <h2>Заказ №<?=$id_order?> от <?=date('d.m.Y')?></h2>
@@ -232,8 +232,9 @@ if(isset($_GET['action']))
         <?
       $text = ob_get_clean();
 
-      mailTo(set('admin_mail'),$subj,$text,$email); // админу
-      mailTo($email,$subj,$text,set('admin_mail')); // клиенту
+      require_once ($_SERVER['DOCUMENT_ROOT'] . '/inc/Mailer.php');
+      $Mailer = new Mailer();
+      $Mailer->mailTo($subject,$text,array(set('admin_mail'),'info@estill.ru',$email));
 
       unset($_SESSION['cart']);
 

@@ -29,8 +29,8 @@ require($_SERVER['DOCUMENT_ROOT'].'/inc/spec.php'); //функции
 }*/
 
 // определяем количество пользователей на сайте
-//online();
+online();
 
 // СТАТИСТИКА ПОСЕЩЕНИЙ САЙТА
-//if(!getField("SELECT COUNT(*) FROM {$prx}users_visit WHERE ip='{$_SERVER['REMOTE_ADDR']}' AND `date`='".date('Y-m-d')."'"))
-	//update('users_visit',"`date`=NOW(),ip='{$_SERVER['REMOTE_ADDR']}'");
+if(!getField("SELECT COUNT(*) FROM {$prx}users_visit WHERE ip='{$_SERVER['REMOTE_ADDR']}' AND `date`='".date('Y-m-d')."'"))
+	update('users_visit',"`date`=NOW(),ip='{$_SERVER['REMOTE_ADDR']}'");

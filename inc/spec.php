@@ -211,7 +211,7 @@ function pagination($count_page, $cur_page)
 	$link = str_replace($h[1],'',$_SERVER['REQUEST_URI']);
 
   ?>
-  <ul class="pagination">
+  <ul class="pagination pagination-sm">
     <li<?=$cur_page==1?' class="disabled"':''?>><a href="<?=$link?>&page=<?=$cur_page>1?$cur_page-1:1?>">&laquo;</a></li>
 		<?
 		for ($page = 1; $page <= $count_page; $page++) {

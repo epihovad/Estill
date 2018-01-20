@@ -29,8 +29,10 @@ b, strong { color:#006cb0;}
 .inline { display:inline-block; }
 div.clear { clear:both; font-size:0; overflow:hidden; }
 div.all { font-size:14px; clear:both; text-align:right; }
-a.back { clear:both; display:inline-block; margin-top:20px; }
-a.more:after { content:"→"; position:absolute; margin-left:5px; }
+a.back { clear:both; display:inline-block; margin-top:20px; padding-left:10px; }
+a.back:before { content:"«"; position:absolute; margin-left:-10px; }
+a.more { clear:both; display:inline-block; margin-top:20px; float:right; padding-right:10px; }
+a.more:after { content:"»"; position:absolute; margin-left:5px; }
 .nofind { text-align:center; font-size:18px;}
 
 .row { margin:0;}
@@ -88,11 +90,9 @@ a.more:after { content:"→"; position:absolute; margin-left:5px; }
 #Header-middle .feed-msg a:hover { background-position:-88px -44px;}
 
 #Header-bottom .line { background-color:#42a4ff; padding-top:1px;}
-#Header-bottom #main { list-style:none; }
-#Header-bottom #main { list-style:none; }
-#Header-bottom #main li { height:59px; text-align:center; }
-#Header-bottom #main li a { display:inline-block; padding-top:18px; width:100%; height:59px; font:normal 18px 'Source Sans Pro', sans-serif; color:#fff; }
-#Header-bottom #main li.active a, #Header-bottom #main li:hover a { color:#a5d4ff;}
+#Header-bottom #main { display:table; width:100%;}
+#Header-bottom #main a { white-space:nowrap; display:table-cell; text-align:center; vertical-align:middle; height:59px; font:normal 18px 'Source Sans Pro', sans-serif; color:#fff; }
+#Header-bottom #main a.active, #Header-bottom #main a:hover { color:#a5d4ff;}
 
 #arSlider {  }
 #islider { width:1260px; height:450px; margin:0 auto; }
@@ -171,8 +171,8 @@ a.more:after { content:"→"; position:absolute; margin-left:5px; }
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
-#blog a .im { width:370px; overflow:hidden;}
-#blog a .im img { width:100%; border-radius:5px 5px 0 0;}
+#blog a .im { width:370px; height:270px; overflow:hidden;}
+#blog a .im img { border-radius:5px 5px 0 0;}
 #blog a .preview { padding:20px 30px;}
 #blog a .name { color:#42a4ff; text-align:left; padding-bottom:10px; font-size:18px;}
 #blog a .date { padding-bottom:15px; color:#b1b1b1; font-style:italic; text-align:left;}
@@ -214,6 +214,14 @@ form div.hdn { display:none !important;}
 #glist .good .price { float:left; margin-left:20px; font:normal 18px/30px Arial, Helvetica, sans-serif; color:#313132;}
 #glist .good .btn { float:right; margin-right:20px;}
 #glist .good .btn span { background-image:url(/img/tocart.png); background-repeat:no-repeat;}
+
+#blist .item:first-child { padding-top:20px;}
+#blist .item h3 { margin:0; padding:0;}
+#blist .item .date { padding:5px 0 15px 0; color:#b1b1b1;}
+#blist .item { padding:0 0 0 270px;}
+#blist .item .im { float:left; margin: 5px 0 0 -270px; }
+#blist .item .im img { box-shadow:0 0 10px #ccc; border-radius:5px; }
+#blist .item + hr { margin:20px 0; padding:0;}
 
 #inFooter { color:#777;}
 #inFooter .sep { padding-top:1px; background-color:#777; }

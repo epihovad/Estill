@@ -410,7 +410,7 @@ switch(@$_GET['show'])
     ?>
     <h1>Корзина</h1>
     <div class="content">В данный момент Ваша корзина пуста</div>
-    <a href="" class="back" rel="nofollow">&laquo; назад</a>
+    <a href="" class="back" rel="nofollow">назад</a>
     <?
 
 		break;

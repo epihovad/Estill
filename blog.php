@@ -21,7 +21,7 @@ if($link)
 	?>
   <h1><?=$row['name']?></h1>
   <div class="content"><?=$row['text']?></div>
-  <a href="" class="back" rel="nofollow">&laquo; назад</a>
+  <a href="" class="back" rel="nofollow">назад</a>
 	<?
 
 	$title = $row['name'];
@@ -43,7 +43,7 @@ else
 
 	$r = sql($query);
 	$count_goods = (int)@mysql_num_rows($r); // кол-во объектов в базе
-	$count_goods_on_page = 3; // кол-во объектов на странице
+	$count_goods_on_page = (int)set('count_blog_list') ?: 5; // кол-во объектов на странице
 	$count_page = ceil($count_goods/$count_goods_on_page); // количество страниц
 	$cur_page = (int)$_GET['page'] ? (int)$_GET['page'] : 1;
 
@@ -54,7 +54,7 @@ else
 		?>
     <div class="fright"><?=pagination($count_page, $cur_page)?></div>
     <div class="clear"></div>
-    <div id="nlist">
+    <div id="blist">
     <?
     while($row = mysql_fetch_array($res))
     {
@@ -63,17 +63,15 @@ else
       ?>
       <div class="item">
         <? if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){ ?>
-          <div class="im left"><a href="<?=$link?>" rel="nofollow"><img src="/<?=$tbl?>/<?=$id?>.jpg" width="350" /></a></div>
+          <div class="im"><a href="<?=$link?>" rel="nofollow"><img src="/<?=$tbl?>/<?=$id?>.jpg" width="250" /></a></div>
         <? }?>
         <h3><a href="<?=$link?>"><?=$row['name']?></a></h3>
         <div class="date"><?=getRusDate('d M y',$row['date'])?></div>
         <div class="preview"><?=$row['preview']?></div>
-        <div class="lnk">
-          <a class="bk4 right" href="<?=$link?>" class="bk4 right" rel="nofollow">Подробнее</a>
-          <hr>
-        </div>
+        <a class="more" href="<?=$link?>" rel="nofollow">Подробнее</a>
         <div class="clear"></div>
       </div>
+      <hr>
       <?
     }
     ?>

@@ -20,15 +20,17 @@ function main()
 	if(!$count = @mysql_num_rows($res)) return;
 
 	$url = $_SERVER['REQUEST_URI'];
-	?><ul id="main" class="row"><?
+	?><div id="main"><?
 	while($row = mysql_fetch_assoc($res))
 	{
 		$link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
 		$cur = $row['id']==$mainID || ($url=='/' && $link=='/') ? true : false;
 
-		?><li id="main-<?=$row['id']?>" class="col-md-2<?=$cur?' active':''?>"><a href="<?=$link?>"><?=$row['name']?></a></li><?
+		?><a href="<?=$link?>" id="main-<?=$row['id']?>"<?=$cur?' class="active"':''?> style="width:<?=100/$count?>%"><?=$row['name']?></a><?
+
+		/*><li id="main-<?=$row['id']?>"<?=$cur?' class="active"':''?> style="width:<?=100/$count?>%"><a href="<?=$link?>"><?=$row['name']?></a></li><?*/
 	}
-	?></ul><?
+	?></div><?
 }
 
 function islider()

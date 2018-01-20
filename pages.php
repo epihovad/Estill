@@ -30,7 +30,7 @@ $h1 = $page['h1'] ? $page['h1'] : $page['name'];
     </div>
   <?}?>
 </div>
-<a href="" class="back" rel="nofollow">&laquo; назад</a>
+<a href="" class="back" rel="nofollow">назад</a>
 <?
 $content = ob_get_clean();
 require('tpl/tpl.php');
